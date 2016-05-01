@@ -1,8 +1,0 @@
-[
-  {
-    "srcDir": ".",
-    "destDir": "dest",
-    "files": "**/*.elm",
-    "command": "elm make Main.elm --output dest/Main.js || true"
-  }
-]
