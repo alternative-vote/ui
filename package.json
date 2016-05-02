@@ -19,6 +19,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "lodash": "^4.11.1",
     "nject": "^2.0.1",
+    "q": "^1.4.1",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
     "react-router": "^2.4.0",

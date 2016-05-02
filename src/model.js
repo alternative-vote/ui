@@ -10,18 +10,9 @@ module.exports = () => {
       authToken : Types.String,
       account   : Account,
     },
-    myElections    : {
-      loading   : Types.Boolean,
-      elections : [Election],
-    },
-    editing        : {
-      loading  : Types.Boolean,
-      election : Election,
-    },
-    voting         : {
-      loading  : Types.Boolean,
-      election : Election,
-    },
+    myElections    : [Election],
+    editing        : Election,
+    voting         : Election,
     results        : {
       loading : Types.Boolean,
     }
@@ -33,18 +24,9 @@ module.exports = () => {
       authToken : null,
       account   : null,
     },
-    myElections    : {
-      loading   : false,
-      elections : []
-    },
-    editing        : {
-      loading  : false,
-      election : null,
-    },
-    voting         : {
-      loading  : false,
-      election : null,
-    },
+    myElections     : [],
+    editing        : null,
+    voting         : null,
     results        : {
       loading : false,
     },

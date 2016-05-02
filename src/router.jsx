@@ -2,21 +2,14 @@
 const React = require('react');
 const { Router, Route, Link, browserHistory } = require('react-router')
 
-module.exports = (NoMatch, Login, authService) => {
-  const Placeholder = React.createClass({
-    render : () => {
-      return (
-        <div>Hello world</div>
-      )
-    }
-  });
+module.exports = (NoMatch, Login, MyElections, authService) => {
 
   const isAuth = (nextState, replace) => {
     if (!authService.isLoggedIn()) {
       replace({
-        pathname: '/login',
-        state: { nextPathname: nextState.location.pathname }
-      })
+        pathname : '/login',
+        state    : { nextPathname : nextState.location.pathname }
+      });
     }
   }
 
@@ -24,8 +17,18 @@ module.exports = (NoMatch, Login, authService) => {
     render : function () {
       return (
         <Router history={browserHistory}>
-          <Route path="/" component={Placeholder} onEnter={isAuth} >
-
+          <Route path="/elections" component={MyElections} onEnter={isAuth}>
+            <Route path=":id/configure">
+              <Route path="properties"></Route>
+              <Route path="candidates"></Route>
+              <Route path="categories"></Route>
+              <Route path="summary"></Route>
+            </Route>
+            <Route path=":id/vote">
+              <Route path=":category"></Route>
+              <Route path="summary"></Route>
+            </Route>
+            <Route path=":id/results"></Route>
           </Route>
           <Route path="/login" component={Login}>
           </Route>

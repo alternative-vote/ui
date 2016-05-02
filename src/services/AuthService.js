@@ -7,6 +7,7 @@ module.exports = (model) => {
     login : function(username, password) {
       console.log('logging in');
       model.authentication.loggedIn = true;
+      model.authentication.authToken = 'abcdefg';
     }
   }
 }

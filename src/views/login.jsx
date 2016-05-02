@@ -1,33 +1,35 @@
+const {withRouter} = require('react-router');
 const React = require('react');
 
 module.exports = (LoginForm, authService, model) => {
-  return React.createClass({
-    getInitialState : function() {
+  return withRouter(React.createClass({
+    getInitialState : function () {
       return {
         loggedIn : false
       }
     },
 
-    componentDidMount : function() {
+    componentDidMount : function () {
       this._unwatches = [
-        model.authentication.watch('loggedIn', (isLoggedIn) => {
-          //this.setState({loggedIn : isLoggedIn});
-          this.forceUpdate();
+        model.authentication.watch('loggedIn', (isLoggedIn, wasLoggedIn) => {
+          if (isLoggedIn && isLoggedIn != wasLoggedIn) {
+            this.props.router.push('/elections');
+          }
         })
       ];
     },
 
-    componentWillUnmount : function() {
-      for(const unwatch of this._unwatches) {
+    componentWillUnmount : function () {
+      for (const unwatch of this._unwatches) {
         unwatch();
       }
     },
 
-    login : function(username, password) {
+    login : function (username, password) {
       authService.login(username, password)
     },
 
-    getLoginState : function() {
+    getLoginState : function () {
       return authService.isLoggedIn() ? 'Logged in.' : 'NOT logged in.';
     },
 
@@ -35,9 +37,10 @@ module.exports = (LoginForm, authService, model) => {
       return (
         <div>
           <LoginForm onSubmit={this.login}></LoginForm>
+
           <div>Current login state: {this.getLoginState()}</div>
         </div>
       )
     }
-  });
+  }));
 }
