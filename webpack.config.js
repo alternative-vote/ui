@@ -32,5 +32,8 @@ module.exports = {
   },
   plugins       : [
     new ExtractTextPlugin('./dest/bundle.css')
-  ]
+  ],
+  devServer : {
+    historyApiFallback: true,
+  }
 }

@@ -1,26 +1,23 @@
-require('./test.styl');
-import {Tree} from 'nject';
+const React = require('react');
+const {render} = require('react-dom');
+const {Tree} = require('nject');
 
-import {Election} from '@alternativeVote/data-model';
-//const models = require('@alternativeVote/data-model');
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-//const election = new models.Election();
+const tree = new Tree();
 
-//console.log(election);
+tree
+  // model
+  .register('model', require('./model'))
 
-const a   = 7;
-const b   = 9;
-const obj = [a, b];
+  // services
+  .register('authService', require('./services/authService.js'))
 
-for (const x of obj) {
-  console.log(x);
-}
+  // components
+  .register('LoginForm', require('./components/loginForm.jsx'))
 
-class MyComponent extends React.Component {
-  render() {
-    return <div>What is up my friends</div>;
-  }
-}
+  // views
+  .register('NoMatch', require('./views/noMatch.jsx'))
+  .register('Login', require('./views/login.jsx'))
+  .register('router', require('./router.jsx'));
 
-ReactDOM.render(<MyComponent />, document.getElementById('app'));
+const Router = tree.resolve('router');
+render(<Router />, document.getElementById('app'));
