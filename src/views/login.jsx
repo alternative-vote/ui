@@ -13,7 +13,7 @@ module.exports = (LoginForm, authService, model) => {
       this._unwatches = [
         model.authentication.watch('loggedIn', (isLoggedIn, wasLoggedIn) => {
           if (isLoggedIn && isLoggedIn != wasLoggedIn) {
-            this.props.router.push('/elections');
+            this.props.router.push('/');
           }
         })
       ];

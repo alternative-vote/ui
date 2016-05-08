@@ -2,7 +2,11 @@
 const {Election} = require('@alternativeVote/data-model');
 const Q = require('q');
 
+
 module.exports = (model, mockData) => {
+  const mockElections = mockData.myElections();
+
+
   return {
     _checkAuth : function () {
 
@@ -14,20 +18,24 @@ module.exports = (model, mockData) => {
 
     createElection : function () {
       return Q(mockData.createElection()).then((election) => {
-        model.myElections.push(election);
+        mockElections.push(election);
         return election;
       })
     },
 
     getMyElections : function () {
-      let mockElections = model.myElections
-      if(mockElections.length == 0) {
-        mockElections = mockData.myElections();
-      }
       return Q(mockElections).then((elections) => {
         model.myElections = elections;
         return elections;
       });
+    },
+
+    getElection : function(id) {
+      const match = mockElections.find((election) => {
+        return election.id == id;
+      });
+
+      return Q(match);
     },
   }
 }
