@@ -40,7 +40,7 @@ module.exports = (DatetimePicker, model) => {
         this.setState({
           [key] : e.target.value
         });
-        //model.editing[key] = e.target.value;
+        model.editing[key] = e.target.value;
       }
     },
 
@@ -50,7 +50,7 @@ module.exports = (DatetimePicker, model) => {
         this.setState({
           [key] : value
         });
-        //model.editing[key] = value;
+        model.editing[key].date = value;
       }
     },
 
