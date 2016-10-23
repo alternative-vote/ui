@@ -1,4 +1,4 @@
-# Data Model
+# Data state
 ```javascript
 
 //Election

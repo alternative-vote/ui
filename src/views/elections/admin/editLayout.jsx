@@ -1,11 +1,11 @@
 const {withRouter, Link} = require('react-router');
 const React = require('react');
 
-module.exports = (model, electionService) => {
+module.exports = (state, electionService) => {
   return withRouter(React.createClass({
     componentDidMount : function() {
       electionService.getElection(this.props.routeParams.id).then((election) => {
-        model.editing = election;
+        state.editing = election;
       });
     },
 

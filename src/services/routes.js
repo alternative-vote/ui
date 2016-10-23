@@ -5,16 +5,11 @@ module.exports = () => {
     home                : '/',
     join                : '/join',
     login               : '/login',
-    configure           : '/elections/:id/configure',
-    configureProperties : '/elections/:id/properties',
-    configureCandidates : '/elections/:id/candidates',
-    configureCategories : '/elections/:id/categories',
-    configureVoters     : '/elections/:id/voters',
-    configureSummary    : '/elections/:id/summary',
-    vote                : '/elections/:id/vote',
-    voteCategory        : '/elections/:id/vote/:category',
-    voteSummary         : '/elections/:id/vote/summary',
-    results             : '/elections/:id/results',
+    editElection        : '/elections/:electionId/edit',
+    vote                : '/elections/:electionId/vote',
+    voteCategory        : '/elections/:electionId/vote/:category',
+    voteSummary         : '/elections/:electionId/vote/summary',
+    results             : '/elections/:electionId/results',
   }
 
   function buildApi(api, key) {

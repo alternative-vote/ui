@@ -5,10 +5,11 @@ const {Tree} = require('nject');
 const tree = new Tree();
 
 tree
-  .register('mockData', require('./mockData.js'))
+  .register('mockData', require('./services/mockData.js'))
 
-  // model
-  .register('model', require('./model'))
+  // state
+  .constant('Models', require('./models'))
+  .register('state', require('./services/state.js'))
 
   // services
   .register('authService', require('./services/authService.js'))
@@ -19,16 +20,21 @@ tree
   .register({
     LoginForm      : require('./components/loginForm.jsx'),
     DatetimePicker : require('./components/datetimePicker.jsx'),
+    EditElectionForm : require('./components/editElectionForm.jsx'),
+    PageHeader : require('./components/pageHeader.jsx'),
+    CandidateCard : require('./components/candidateCard.jsx'),
+    CandidatesEditor : require('./components/candidatesEditor.jsx'),
   }, { aggregateOn : 'components' })
 
   // views
   .register({
-    EditLayout     : require('./views/elections/admin/editLayout.jsx'),
-    EditProperties : require('./views/elections/admin/editProperties.jsx'),
-    EditCandidates : require('./views/elections/admin/editCandidates.jsx'),
-    EditCategories : require('./views/elections/admin/editCategories.jsx'),
-    EditVoters     : require('./views/elections/admin/editVoters.jsx'),
-    EditSummary    : require('./views/elections/admin/editSummary.jsx'),
+    EditElection     : require('./views/elections/admin/editElection.jsx'),
+    // EditLayout     : require('./views/elections/admin/editLayout.jsx'),
+    // EditProperties : require('./views/elections/admin/editProperties.jsx'),
+    // EditCandidates : require('./views/elections/admin/editCandidates.jsx'),
+    // EditCategories : require('./views/elections/admin/editCategories.jsx'),
+    // EditVoters     : require('./views/elections/admin/editVoters.jsx'),
+    // EditSummary    : require('./views/elections/admin/editSummary.jsx'),
     NoMatch        : require('./views/noMatch.jsx'),
     Login          : require('./views/login.jsx'),
     MyElections    : require('./views/elections/admin/myElections.jsx'),

@@ -18,6 +18,11 @@ module.exports = {
         loader : ExtractTextPlugin.extract('style-loader', 'css-loader!stylus-loader')
       },
       {
+        test: /\.s[ac]ss$/,
+        // loaders: ['style', 'css', 'sass'],
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader'),
+      },
+      {
         test    : /.jsx?$/,
         loader  : 'babel-loader',
         exclude : /node_modules/,

@@ -1,13 +1,13 @@
-module.exports = (model) => {
+module.exports = (state) => {
   return {
     isLoggedIn : function () {
-      return model.authentication.loggedIn;
+      return state.authentication.loggedIn;
     },
 
-    login : function(username, password) {
+    login : function(username, password) { 
       console.log('logging in');
-      model.authentication.loggedIn = true;
-      model.authentication.authToken = 'abcdefg';
+      state.authentication.loggedIn = true;
+      state.authentication.authToken = 'abcdefg';
     }
   }
 }

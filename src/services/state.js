@@ -1,9 +1,10 @@
 const Scheming = require('scheming');
-const {Election, Account} = require('@alternativeVote/data-model');
 
 const Types = Scheming.TYPES;
 
-module.exports = () => {
+module.exports = (Models) => {
+  const {Election, Account} = Models;
+
   const AppModel = Scheming.create('AppModel', {
     authentication : {
       loggedIn  : Types.Boolean,

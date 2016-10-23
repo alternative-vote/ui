@@ -1,11 +1,8 @@
 'use strict';
-const {Election} = require('@alternativeVote/data-model');
 const Q = require('q');
 
-
-module.exports = (model, mockData) => {
+module.exports = (state, mockData) => {
   const mockElections = mockData.myElections();
-
 
   return {
     _checkAuth : function () {
@@ -25,7 +22,7 @@ module.exports = (model, mockData) => {
 
     getMyElections : function () {
       return Q(mockElections).then((elections) => {
-        model.myElections = elections;
+        state.myElections = elections;
         return elections;
       });
     },

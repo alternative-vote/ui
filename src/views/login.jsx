@@ -1,7 +1,7 @@
 const {withRouter} = require('react-router');
 const React = require('react');
 
-module.exports = (LoginForm, authService, model) => {
+module.exports = (LoginForm, authService, state) => {
   return withRouter(React.createClass({
     getInitialState : function () {
       return {
@@ -11,7 +11,7 @@ module.exports = (LoginForm, authService, model) => {
 
     componentDidMount : function () {
       this._unwatches = [
-        model.authentication.watch('loggedIn', (isLoggedIn, wasLoggedIn) => {
+        state.authentication.watch('loggedIn', (isLoggedIn, wasLoggedIn) => {
           if (isLoggedIn && isLoggedIn != wasLoggedIn) {
             this.props.router.push('/');
           }

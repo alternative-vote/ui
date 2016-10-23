@@ -1,11 +1,11 @@
 'use strict';
 const React = require('react');
 
-module.exports = (model) => {
+module.exports = (state) => {
   return React.createClass({
     componentDidMount : function() {
       this._unwatches = [
-        model.editing.watch(['name', 'description', 'start', 'end'])
+        state.editing.watch(['name', 'description', 'start', 'end'])
       ]
     },
 
@@ -18,17 +18,17 @@ module.exports = (model) => {
     setProperty : function(key) {
       return (e) => {
         console.log('changing key')
-        model.editing[key] = e.target.value;
+        state.editing[key] = e.target.value;
       }
     },
 
     render : function() {
       return (
         <form>
-          <input type="text" value={model.editing.name} onChange={setProperty('name')}/>
-          <input type="text" value={model.editing.description} onChange={setProperty('description')}/>
-          <input type="text" value={model.editing.start} onChange={setProperty('start')}/>
-          <input type="text" value={model.editing.end} onChange={setProperty('end')}/>
+          <input type="text" value={state.editing.name} onChange={setProperty('name')}/>
+          <input type="text" value={state.editing.description} onChange={setProperty('description')}/>
+          <input type="text" value={state.editing.start} onChange={setProperty('start')}/>
+          <input type="text" value={state.editing.end} onChange={setProperty('end')}/>
         </form>
       )
     },
