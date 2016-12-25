@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { observer } from "mobx-react";
 import { observable } from "mobx";
 import { withRouter } from 'react-router';
-import auth from '../service/auth';
-
-
+import auth from '../services/auth';
 
 class LoginModel {
   @observable username = ''; 
@@ -12,7 +10,6 @@ class LoginModel {
   @observable errorMessage = '';
 }
 
-@withRouter
 @observer
 class LoginPage extends Component {
   state = new LoginModel()
@@ -21,7 +18,7 @@ class LoginPage extends Component {
     e.preventDefault();
 
     auth.login(this.state.username, this.state.password).then(() => {
-      this.props.router.push('/ ')
+      this.props.router.push('/')
     }).catch((errorMessage) => {
       this.state.errorMessage = (
         <div className="notification is-danger">
@@ -85,6 +82,14 @@ class LoginPage extends Component {
     );
   }
 };
+
+class Car {
+  make = '';
+  model = '';
+  age = 0;
+}
+
+new Car()
 
 
 export default LoginPage;
