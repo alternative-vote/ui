@@ -7,7 +7,7 @@ import auth from '../service/auth';
 
 
 class LoginModel {
-  @observable username = '';
+  @observable username = ''; 
   @observable password = '';
   @observable errorMessage = '';
 }
@@ -22,6 +22,20 @@ class LoginPage extends Component {
 
     auth.login(this.state.username, this.state.password).then(() => {
       this.props.router.push('/ ')
+    }).catch((errorMessage) => {
+      this.state.errorMessage = (
+        <div className="notification is-danger">
+          {errorMessage}
+        </div>
+      )
+    })
+  }
+
+  create = (e) => {
+    e.preventDefault()
+
+    auth.create(this.state.username, this.state.password).then(() => {
+      return this.login(e)
     }).catch((errorMessage) => {
       this.state.errorMessage = (
         <div className="notification is-danger">
@@ -56,7 +70,10 @@ class LoginPage extends Component {
                     <input type="password" className="input" placeholder="password" name="password" value={this.state.password} onChange={this.setPassword} />
                   </div>
                   <div className="control level">
-                    <span className="level-item">create account</span>
+                    <span className="level-item">
+                      <a onClick={this.create}>create account</a>
+                    </span>
+                    <span className="level-item"></span>
                     <button className="level-item button is-primary">Submit</button>
                   </div>
                 </form>

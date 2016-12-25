@@ -1,12 +1,28 @@
+const _ = require('lodash')
+
 class AuthService {
+
+    allowed = [
+        {username : 'admin', password : 'password'}
+    ]
 
     login(username, password) {
         return new Promise((resolve, reject) => {
-            if(username =='admin' && password =='password') {
-                return resolve()
+            const i = _.findIndex(this.allowed, {username, password})
+
+            if (i == -1) {
+                return reject('Incorect username or password.');
             }
-            return reject('Incorect username or password.');
+
+            return resolve()
         });
+    }
+
+    create(username, password) {
+        return new Promise((resolve, reject) => {
+            this.allowed.push({username, password})
+            resolve()
+        })
     }
 
 }
