@@ -29,6 +29,7 @@ class App extends Component {
             <IndexRoute  component={HomePage}/>
             <Route path="/elections/:electionId/admin" component={ElectionAdminPage}/>
           </Route>
+          <Route path="/vote/:hash" onEnter={VotePage.fromHash}/>
           <Route path="/elections/:electionId/vote" component={VotePage}/>
           <Route path="*" component={NotFoundPage}/>
         </Router>

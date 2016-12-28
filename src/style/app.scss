@@ -1,3 +1,41 @@
 .full-height {
     height: 100%
 }
+
+.z-1 {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.z-2 {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.z-3 {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.z-4 {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.z-5 {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+}
+
+.candidate-card {
+  margin-bottom: 15px;
+}
+
+.candidate-card.dragging {
+  box-shadow: none;
+  border: 1px dashed black;
+  .card-content {
+    opacity: 0;
+  }
+}
+  
+.candidate-card:hover {
+  cursor: grab;
+  cursor: -webkit-grab; 
+  cursor: -moz-grab;
+}

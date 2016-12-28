@@ -1,21 +1,22 @@
 const _ = require('lodash')
 
 class AuthStore {
-    key = "auth"
+    key = "auth_token"
 
-    set(auth) {
-        localStorage.setItem(this.key, JSON.stringify(auth || {}))
+    set(authToken) {
+        localStorage.setItem(this.key, authToken)
     }
 
     clear() {
-        this.set({})
+        localStorage.clear(this.key)
     }
 
     get() {
-        return JSON.parse(localStorage.getItem(this.key)) || {}
+        return localStorage.getItem(this.key)
     }
 }
 
+//TODO: separate auth schemes for admin vs voting
 class AuthService {
     allowed = [
         {username : 'admin', password : 'password'}
@@ -31,10 +32,7 @@ class AuthService {
                 return reject('Incorect username or password.');
             }
 
-            this.store.set({
-                token : 'asdf',
-                userId : 1
-            })
+            this.setToken('asdf')
 
             return resolve()
         });
@@ -42,6 +40,10 @@ class AuthService {
 
     logout() {
         this.store.clear()
+    }
+
+    setToken(token) {
+        this.store.set(token)
     }
 
     create(username, password) {
@@ -52,15 +54,11 @@ class AuthService {
     }
 
     isLoggedIn() {
-        return this.store.get().token != null
+        return this.store.get() != null
     }
 
     getToken() {
-        return this.store.get().token
-    }
-
-    getUserId() {
-        return this.store.get().userId
+        return this.store.get()
     }
 }
 

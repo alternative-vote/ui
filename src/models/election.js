@@ -11,12 +11,13 @@ export class Role {
 }
 
 export class Candidate {
+    @observable id = '';
     @observable title = '';
     @observable subtitle = '';
     @observable description = '';
 }
 
-export class ElectionModel {
+export class Election {
     @observable id = '';
     @observable title = '';
     @observable subtitle = '';
@@ -31,10 +32,30 @@ export class ElectionModel {
         voters : new Role(),
         admins : new Role(),
     };
-    @observable votes = {
-        count : 0,
-        percentage : 0,
-        trend : [],
-    };
-    @observable results = [];
+
+    //TODO: placeholders
+    @observable votes = {};
+    @observable results = {};
+
+    static mock() {
+        const model = new Election()
+
+        model.id = randomString()
+        model.title = randomString()
+        model.subtitle = randomString()
+        model.description = randomString()
+
+        return model;
+    }
+}
+
+function randomString()
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < 5; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
 }
