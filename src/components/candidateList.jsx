@@ -42,16 +42,34 @@ export default class CandidateList extends Component {
         return _.difference(this.props.candidates, this.props.ballot.votes)
     }
 
+    emptyMessage = () => {
+        if (this.getUnusedCandidates().length > 0) {
+            return ''
+        }
+
+        return (
+            <p className="has-text-centered">No candidates remaining</p>
+        )
+    }
+
     noop = () => {}
 
     render() {
         const { connectDropTarget, isOver } = this.props;
         //TODO: SOME HOVER EFFECT
         return connectDropTarget(
-            <div className="">
-                {this.getUnusedCandidates().map((candidate, i) => (
-                    <CandidateCard key={candidate.id} index={i} candidate={candidate} moveCandidate={this.noop}/>
-                ))}
+            <div className="card z-2 is-fullwidth">
+                <div className="card-content">
+                    <h1 className="title has-text-centered">Candidates</h1>
+                    {this.emptyMessage()}
+                    {this.getUnusedCandidates().map((candidate, i) => (
+                        <div className="columns" key={candidate.id} >
+                        <div className="column">
+                            <CandidateCard index={i} candidate={candidate} details disabledDrop/>
+                        </div>
+                        </div>
+                    ))}
+                </div>
             </div>
         )
     }

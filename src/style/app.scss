@@ -22,8 +22,9 @@
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
 }
 
-.candidate-card {
-  margin-bottom: 15px;
+.placeholder {
+  height : 40px;
+  border-bottom: 1px solid rgba(0,0,0,0.64)
 }
 
 .candidate-card.dragging {
@@ -38,4 +39,22 @@
   cursor: grab;
   cursor: -webkit-grab; 
   cursor: -moz-grab;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header {
+  flex: 0 0 auto;
+}
+
+.page-body {
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+.page-footer {
+  flex: 0 0 auto;
 }

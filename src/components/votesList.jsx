@@ -19,6 +19,7 @@ const target = {
             console.log('adding', id)
             const candidate = _.find(candidates, { id })
             votes.push(candidate)
+            monitor.getItem().index = votes.length
         }
     }
 };
@@ -55,6 +56,8 @@ export default class VotesList extends Component {
             votes.splice(currentIndex, 1)
         }
         votes.splice(targetIndex, 0, candidate)
+
+        return targetIndex
     }
 
     placeholder = () => {
@@ -82,24 +85,54 @@ export default class VotesList extends Component {
         )
     }
 
+    renderCandidate = (candidate, i) => {
+        let card = ''
+        let key = ''
+        if (candidate == null) {
+            if(this.props.disabled) {
+                return ''
+            }
+            if(this.props.ballot.votes.length == this.props.candidates.length) {
+                return ''
+            }
+
+            i = this.props.ballot.votes.length
+            card = (
+                <div className="placeholder"></div>
+            )
+        } else {
+            card = (
+                <CandidateCard key={candidate.id} index={i} candidate={candidate} moveCandidate={this.reorder} disabled={this.props.disabled} enableDrop/>
+            )
+            key = candidate.id
+        }
+
+        return (
+            <div className="level columns" key={key}>
+                <div className="level-left column is-1">
+                    <div className="level-item">
+                        <h1 className="title">{i+1}</h1>
+                    </div>
+                </div>
+                <div className="level-item column">
+                    {card}
+                </div>
+            </div>
+        )
+    }
+
     render() {
         const { connectDropTarget, isOver } = this.props;
         //TODO: SOME HOVER EFFECT
         const ui = (
-            <div className="">
-                <div className="columns">
-                    <div className="column is-8 is-offset-2">
-                        {this.props.ballot.votes.map((candidate, i) => (
-                            <div className="columns" key={candidate.id}>
-                                <div className="column is-2">
-                                    <h1 className="title">{i+1}</h1>
-                                </div>
-                                <div className="column">
-                                    <CandidateCard key={candidate.id} index={i} candidate={candidate} moveCandidate={this.reorder} disabled={this.props.disabled}/>
-                                </div>
-                            </div>
-                        ))}
-                        {this.placeholder()}
+            <div className="card z-2 is-fullwidth">
+                <div className="card-content">
+                    <h1 className="title has-text-centered">My Ballot</h1>
+                    <div className="columns">
+                        <div className="column is-8 is-offset-2">
+                            {this.props.ballot.votes.map(this.renderCandidate)}
+                            {this.renderCandidate()}
+                        </div>
                     </div>
                 </div>
             </div>

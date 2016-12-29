@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable } from "mobx";
+import { observable, action } from "mobx";
 import { observer } from "mobx-react";
 import q from 'q'
 import auth from '../services/auth'
@@ -26,10 +26,10 @@ class VotePage extends Component {
   }
 
   @observable state = {
-    loading : true,
     election : null,
-    candidates : [],
     ballot : null,
+    isLoading : true,
+    isConfirming : false,
   }
 
   constructor(props) {
@@ -46,12 +46,26 @@ class VotePage extends Component {
       this.state.election = election
       this.state.ballot = ballot
     }).finally(() => {
-      this.state.loading = false
+      this.state.isLoading = false
     }).done()
   }
 
+  @action
+  startConfirmation = () => {
+    this.state.isConfirming = true
+  }
+
+  @action
+  cancelConfirmation = () => {
+    this.state.isConfirming = false
+  }
+
+  isBallotDisabled = () => {
+    return this.state.isConfirming || this.state.ballot.isSubmitted
+  }
+
   ballot = () => {
-    if(this.state.loading) {
+    if(this.state.isLoading) {
       return (
         <div className="has-text-centered">
         <Halogen.PulseLoader color={"gray"}/>
@@ -70,15 +84,38 @@ class VotePage extends Component {
           </h2>
         </div>
 
-        <Ballot ballot={this.state.ballot} candidates={this.state.election.candidates}/>
+        <Ballot ballot={this.state.ballot} candidates={this.state.election.candidates} disabled={this.isBallotDisabled()}/>
+      </div>
+    )
+  }
+
+  footerButtons = () => {
+    if (this.state.isConfirming) { 
+      return (
+        <div className="nav-right">
+          <div className="nav-item">
+            <button className="button" onClick={this.cancelConfirmation}>Cancel</button>
+          </div>
+          <div className="nav-item">
+            <button className="button" onClick={this.startConfirmation}>Confirm</button>
+          </div>
+        </div>
+      )
+    } 
+
+    return (
+      <div className="nav-right">
+        <div className="nav-item">
+          <button className="button" onClick={this.startConfirmation}>Submit</button>
+        </div>
       </div>
     )
   }
 
   render() {
     return (
-      <div className="full-height">   
-        <header className="hero is-primary">
+      <div className="full-height page">   
+        <header className="hero is-primary page-header">
           <div className="hero-head">
             <div className="container">
             <nav className="nav">
@@ -91,9 +128,18 @@ class VotePage extends Component {
             </div>
           </div>
         </header>
-        <section className="section">
+        <section className="section page-body">
           {this.ballot()}
         </section>
+        <footer className="hero is-primary page-footer">
+          <div className="hero-head">
+          <div className="container">
+          <div className="nav">
+            {this.footerButtons()}
+          </div>
+          </div>
+          </div>
+        </footer>
       </div>
     );
   }

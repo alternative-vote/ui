@@ -16,17 +16,15 @@ import VotesList from './votesList'
 
 const card_TYPE = 'card'
 
+//TODO: switch html5 / touch backends
 @DragDropContext(HTML5Backend)
 @observer
 class Ballot extends Component {
     static propTypes = {
+        disabled : React.PropTypes.bool,
         ballot : React.PropTypes.instanceOf(BallotModel).isRequired,
         candidates : React.PropTypes.any.isRequired,
     }
-
-    // getData = () => {
-    //     return this.props.candidates
-    // }
 
     getUnusedCandidates = () => {
         return _.difference(this.props.candidates, this.props.ballot.votes)
@@ -43,24 +41,24 @@ class Ballot extends Component {
         return targetIndex
     }
 
+    candidateList = () => {
+        if (this.props.disabled) {
+            return ''
+        }  
+        
+        return (
+            <div className="column is-one-third">
+                <CandidateList ballot={this.props.ballot} candidates={this.props.candidates} disabled={this.props.disabled}/>
+            </div>
+        )
+    }
+
     render() {
         return (
             <div className="columns">
-                <div className="column is-one-third">
-                    <div className="card z-2 is-fullwidth">
-                        <div className="card-content">
-                            <h1 className="title has-text-centered">Candidates</h1>
-                            <CandidateList ballot={this.props.ballot} candidates={this.props.candidates}/>
-                        </div>
-                    </div>
-                </div>
+                {this.candidateList()}
                 <div className="column">
-                    <div className="card z-2 is-fullwidth">
-                        <div className="card-content">
-                            <h1 className="title has-text-centered">My Ballot</h1>
-                            <VotesList ballot={this.props.ballot} candidates={this.props.candidates}/>
-                        </div>
-                    </div>
+                    <VotesList ballot={this.props.ballot} candidates={this.props.candidates} disabled={this.props.disabled}/>
                 </div>
             </div>
         )
