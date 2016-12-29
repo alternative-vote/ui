@@ -48,7 +48,9 @@ export default class CandidateList extends Component {
         }
 
         return (
-            <p className="has-text-centered">No candidates remaining</p>
+            <div className="has-text-centered">
+            <small>No candidates remaining.</small>
+            </div>
         )
     }
 

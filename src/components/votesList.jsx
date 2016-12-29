@@ -62,7 +62,15 @@ export default class VotesList extends Component {
 
     placeholder = () => {
         if(this.props.disabled) {
-            return ''
+            if (this.props.ballot.votes.length == 0) {
+                return (
+                    <div className="has-text-centered">
+                    <small>This ballot is empty.</small>
+                    </div>
+                )
+            } else {
+                return ''
+            }
         }
         if(this.props.ballot.votes.length == this.props.candidates.length) {
             return ''
@@ -90,7 +98,15 @@ export default class VotesList extends Component {
         let key = ''
         if (candidate == null) {
             if(this.props.disabled) {
-                return ''
+                if (this.props.ballot.votes.length == 0) {
+                    return (
+                        <div className="has-text-centered">
+                        <small>This ballot is empty.</small>
+                        </div>
+                    )
+                } else {
+                    return ''
+                }
             }
             if(this.props.ballot.votes.length == this.props.candidates.length) {
                 return ''
