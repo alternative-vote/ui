@@ -55,8 +55,8 @@ class Ballot extends Component {
 
     render() {
         return (
-            <div className="flex flex-col">
-                <div className="columns">
+            <div className="flex flex-col flex-auto">
+                <div className="columns flex-auto">
                     {this.candidateList()}
                     <div className="column flex">
                         <VotesList ballot={this.props.ballot} candidates={this.props.candidates} disabled={this.props.disabled}/>

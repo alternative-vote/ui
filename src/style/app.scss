@@ -60,11 +60,14 @@
 
 .flex-auto {
   flex: auto;
-  overflow: auto;
 }
 
 .flex-center {
   justify-content: center;
+}
+
+.scroll {
+  overflow: auto;
 }
 
 .scroll-fade-bottom {
@@ -72,8 +75,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 10px;
-  padding-right:15px;
+  height: 15px;
+  margin-right:10px;
   background: linear-gradient(0, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
   z-index: 1;
 }
@@ -83,8 +86,8 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 10px;
-  padding-right:15px;
+  height: 15px;
+  margin-right:10px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
   z-index: 1;
 }

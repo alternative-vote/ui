@@ -66,10 +66,9 @@ export default class CandidateList extends Component {
                         <h1 className="title has-text-centered">Candidates</h1>
                     </div>
                 </div>
-                <div className="flex-auto flex">
+                <div className="flex flex-auto">
                 <div className="scroll-fade-top"></div>
-                <div className="card-content flex-auto">
-                    <div>
+                <div className="card-content flex-auto scroll">
                     {this.emptyMessage()}
                     {this.getUnusedCandidates().map((candidate, i) => (
                         <div className="columns" key={candidate.id} >
@@ -78,7 +77,6 @@ export default class CandidateList extends Component {
                         </div>
                         </div>
                     ))}
-                    </div>
                 </div>
                 <div className="scroll-fade-bottom"></div>
                 </div>

@@ -141,15 +141,23 @@ export default class VotesList extends Component {
         const { connectDropTarget, isOver } = this.props;
         //TODO: SOME HOVER EFFECT
         const ui = (
-            <div className="card z-2 is-fullwidth">
-                <div className="card-content">
-                    <h1 className="title has-text-centered">My Ballot</h1>
-                    <div className="columns">
-                        <div className="column is-8 is-offset-2">
-                            {this.props.ballot.votes.map(this.renderCandidate)}
-                            {this.renderCandidate()}
+            <div className="card z-2 is-fullwidth flex flex-col">
+                <div className="card-content flex-none">
+                    <div>
+                        <h1 className="title has-text-centered">My Ballot</h1>
+                    </div>
+                </div>
+                <div className="flex flex-auto">
+                    <div className="scroll-fade-top"></div>
+                    <div className="card-content flex-auto scroll">
+                        <div className="columns">
+                            <div className="column is-8 is-offset-2">
+                                {this.props.ballot.votes.map(this.renderCandidate)}
+                                {this.renderCandidate()}
+                            </div>
                         </div>
                     </div>
+                    <div className="scroll-fade-bottom"></div>
                 </div>
             </div>
         )
