@@ -60,9 +60,16 @@ export default class CandidateList extends Component {
         const { connectDropTarget, isOver } = this.props;
         //TODO: SOME HOVER EFFECT
         return connectDropTarget(
-            <div className="card z-2 is-fullwidth">
-                <div className="card-content">
-                    <h1 className="title has-text-centered">Candidates</h1>
+            <div className="card z-2 is-fullwidth flex flex-col">
+                <div className="card-content flex-none">
+                    <div>
+                        <h1 className="title has-text-centered">Candidates</h1>
+                    </div>
+                </div>
+                <div className="flex-auto flex">
+                <div className="scroll-fade-top"></div>
+                <div className="card-content flex-auto">
+                    <div>
                     {this.emptyMessage()}
                     {this.getUnusedCandidates().map((candidate, i) => (
                         <div className="columns" key={candidate.id} >
@@ -71,6 +78,9 @@ export default class CandidateList extends Component {
                         </div>
                         </div>
                     ))}
+                    </div>
+                </div>
+                <div className="scroll-fade-bottom"></div>
                 </div>
             </div>
         )

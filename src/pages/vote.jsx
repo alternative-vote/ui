@@ -74,8 +74,8 @@ class VotePage extends Component {
     }
 
     return (
-      <div className="container">
-        <div className="section has-text-centered">
+      <div className="container flex flex-col">
+        <div className="section has-text-centered flex-none">
           <h1 className="title is-1">
             {this.state.election.title}
           </h1>
@@ -84,7 +84,9 @@ class VotePage extends Component {
           </h2>
         </div>
 
-        <Ballot ballot={this.state.ballot} candidates={this.state.election.candidates} disabled={this.isBallotDisabled()}/>
+        <div className="flex flex-grow">
+          <Ballot ballot={this.state.ballot} candidates={this.state.election.candidates} disabled={this.isBallotDisabled()}/>
+        </div>
       </div>
     )
   }
@@ -114,8 +116,8 @@ class VotePage extends Component {
 
   render() {
     return (
-      <div className="full-height page">   
-        <header className="hero is-primary page-header">
+      <div className="full-height flex flex-col">   
+        <header className="hero is-primary flex-none">
           <div className="hero-head">
             <div className="container">
             <nav className="nav">
@@ -128,10 +130,10 @@ class VotePage extends Component {
             </div>
           </div>
         </header>
-        <section className="section page-body">
+        <section className="section flex flex-col flex-auto">
           {this.ballot()}
         </section>
-        <footer className="hero is-primary page-footer">
+        <footer className="hero is-primary flex-none">
           <div className="hero-head">
           <div className="container">
           <div className="nav">

@@ -47,7 +47,7 @@ class Ballot extends Component {
         }  
         
         return (
-            <div className="column is-one-third">
+            <div className="column is-one-third flex">
                 <CandidateList ballot={this.props.ballot} candidates={this.props.candidates} disabled={this.props.disabled}/>
             </div>
         )
@@ -55,10 +55,12 @@ class Ballot extends Component {
 
     render() {
         return (
-            <div className="columns">
-                {this.candidateList()}
-                <div className="column">
-                    <VotesList ballot={this.props.ballot} candidates={this.props.candidates} disabled={this.props.disabled}/>
+            <div className="flex flex-col">
+                <div className="columns">
+                    {this.candidateList()}
+                    <div className="column flex">
+                        <VotesList ballot={this.props.ballot} candidates={this.props.candidates} disabled={this.props.disabled}/>
+                    </div>
                 </div>
             </div>
         )
