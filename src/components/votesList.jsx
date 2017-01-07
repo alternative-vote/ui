@@ -16,7 +16,6 @@ const target = {
         const index = _.findIndex(votes, { id })
 
         if (index < 0) {
-            console.log('adding', id)
             const candidate = _.find(candidates, { id })
             votes.push(candidate)
             monitor.getItem().index = votes.length

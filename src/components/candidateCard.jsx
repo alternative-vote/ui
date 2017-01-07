@@ -29,11 +29,8 @@ const cardTarget = {
             return;
         }
 
-        console.log(dragIndex, hoverIndex)
-
         // Time to actually perform the action
         monitor.getItem().index = props.moveCandidate(candidateId, hoverIndex);
-        console.log('set index',  monitor.getItem().index)
     }
 }
 
@@ -58,7 +55,6 @@ class CandidateCard extends Component {
 
     render() {
         const { draggingId, connectDragSource, connectDropTarget } = this.props;
-        console.log(draggingId,this.props.candidate.id)
         const isDragging = draggingId == this.props.candidate.id
 
         let ui = (

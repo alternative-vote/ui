@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { action } from "mobx";
+import { autorun, action, observable, toJS } from "mobx";
 import { observer } from "mobx-react";
 import { DragDropContext, DragSource, DropTarget } from 'react-dnd';
 
 import {Ballot as BallotModel} from '../models/ballot'
 
 import CandidateCard from './candidateCard'
+
+const PADDING=20
+const TRANSITION = 'all 0.3s'
 
 const target = {
     @action
@@ -16,7 +19,6 @@ const target = {
         const index = _.findIndex(votes, {id : monitor.getItem().candidateId})
 
         if (index >= 0) {
-            console.log('removing', id)
             votes.splice(index, 1)
         }
     }
@@ -37,13 +39,47 @@ export default class CandidateList extends Component {
         candidates : React.PropTypes.any.isRequired,
     }
 
-    getUnusedCandidates = () => {
-        //todo: random ordering
-        return _.difference(this.props.candidates, this.props.ballot.votes)
+    @observable
+    candidates = []
+
+    @observable
+    positions = {};
+
+    constructor(props) {
+        super(props);
+
+        autorun(() => {
+            this.candidates = toJS(_.difference(this.props.candidates, this.props.ballot.votes))
+        })
     }
 
+    @action
+    setYPoisitons = () => {
+        const newPositions = {}
+        this.candidates.forEach((candidate, i) => {
+            const {id} = candidate;
+            const currentPosition = this.positions[id] || {}
+
+            const y = this.candidates.slice(0, i).reduce((sum, candidate) => {
+                const {el} = candidate
+                return sum + el.offsetHeight + PADDING
+            }, 0)
+            
+            const init = currentPosition.y == null;
+
+            // console.log('assigning', i, y)
+            newPositions[id] = {init, y}
+        }, {})
+
+        if(!_.isEqual(newPositions, toJS(this.positions))) {
+            this.positions = newPositions;
+        }
+    }
+    componentDidMount = this.setYPoisitons
+    componentDidUpdate = this.setYPoisitons    
+
     emptyMessage = () => {
-        if (this.getUnusedCandidates().length > 0) {
+        if (this.candidates.length > 0) {
             return ''
         }
 
@@ -57,6 +93,7 @@ export default class CandidateList extends Component {
     noop = () => {}
 
     render() {
+        console.log('rendering')
         const { connectDropTarget, isOver } = this.props;
         //TODO: SOME HOVER EFFECT
         return connectDropTarget(
@@ -69,14 +106,27 @@ export default class CandidateList extends Component {
                 <div className="flex flex-auto">
                 <div className="scroll-fade-top"></div>
                 <div className="card-content flex-auto scroll">
+                    <div style={{position: 'relative'}}>
                     {this.emptyMessage()}
-                    {this.getUnusedCandidates().map((candidate, i) => (
-                        <div className="columns" key={candidate.id} >
-                        <div className="column">
-                            <CandidateCard index={i} candidate={candidate} details disabledDrop/>
-                        </div>
-                        </div>
-                    ))}
+                    {this.candidates.map((candidate, i) => {
+                        const {id} = candidate;
+                        const {y, init} = this.positions[id] || {};
+
+                        const style = {
+                            position: 'absolute',
+                            width: '100%',
+                            marginBottom: `${PADDING}px`,
+                            transform : y == null ? 'none' : `translateY(${y}px)`,
+                            transition : init ? 'none' : TRANSITION
+                        }
+
+                        return (
+                            <div key={candidate.id} style={{...style}} ref={(el) => {candidate.el=el}}>
+                                <CandidateCard index={i} candidate={candidate} details disabledDrop/>
+                            </div>
+                        )}
+                    )}
+                    </div>
                 </div>
                 <div className="scroll-fade-bottom"></div>
                 </div>

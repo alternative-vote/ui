@@ -13,7 +13,6 @@ import Ballot from '../components/ballot'
 @observer
 class VotePage extends Component {
   static fromHash(nextState, replace, callback) {
-    console.log(nextState)
     const hash = nextState.params.hash
 
     auth.fromHash(hash).then(()=> {
@@ -42,7 +41,6 @@ class VotePage extends Component {
       election.getById(this.props.params.electionId),
       election.getBallot(electionId, userId),
     ]).spread((election, ballot)=>{
-      console.log(election)
       this.state.election = election
       this.state.ballot = ballot
     }).finally(() => {
