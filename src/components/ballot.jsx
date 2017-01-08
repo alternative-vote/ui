@@ -8,16 +8,19 @@ import _  from 'lodash'
 
 import { DragDropContext, DragSource, DropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import TouchBackend from 'react-dnd-touch-backend';
+
 
 // import cardCard from './cardCard'
 import CandidateCard from './candidateCard'
 import CandidateList from './candidateList'
 import VotesList from './votesList'
+import CardDragLayer from './dragLayer'
 
 const card_TYPE = 'card'
 
 //TODO: switch html5 / touch backends
-@DragDropContext(HTML5Backend)
+@DragDropContext(TouchBackend({enableMouseEvents: true}))
 @observer
 class Ballot extends Component {
     static propTypes = {
@@ -56,6 +59,7 @@ class Ballot extends Component {
     render() {
         return (
             <div className="flex flex-col flex-auto">
+                <CardDragLayer candidates={this.props.candidates}></CardDragLayer>
                 <div className="columns flex-auto">
                     {this.candidateList()}
                     <div className="column flex">

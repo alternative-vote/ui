@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 const PADDING=20
 const DURATION = 300;
 const EASE = 'cubic-bezier(0.215, 0.61, 0.355, 1)'
-const TRANSITION = `transform ${DURATION}ms ${EASE}, opacity ${DURATION * 0.6}ms ${EASE} ${DURATION * 0.4}ms`
+const TRANSITION = `transform ${DURATION}ms ${EASE}, opacity ${DURATION * 0.8}ms ${EASE} ${DURATION * 0.2}ms`
 
 @observer
 export default class AnimatedList extends Component {

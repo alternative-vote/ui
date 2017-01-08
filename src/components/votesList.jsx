@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { action } from "mobx";
 import { observer } from "mobx-react";
 import { DragDropContext, DragSource, DropTarget } from 'react-dnd';
+import {Motion, spring} from 'react-motion';
 
 import {Ballot as BallotModel} from '../models/ballot'
 
+import {DraggableCandidateCard} from './candidateCard'
 import AnimatedList from './animatedList'
-import CandidateCard from './candidateCard'
 
 const target = {
     @action
@@ -46,11 +47,12 @@ export default class VotesList extends Component {
     }
 
     @action
-    reorder = (id, targetIndex) => {
+    reorder = (draggingId, targetId) => {
         const votes = this.props.ballot.votes
         const candidates = this.props.candidates
-        const currentIndex = _.findIndex(votes, { id })
-        const candidate = _.find(candidates, { id })
+        const currentIndex = _.findIndex(votes, { id : draggingId })
+        const targetIndex = _.findIndex(votes, { id : targetId })
+        const candidate = _.find(candidates, { id : draggingId })
         
         if(currentIndex >= 0) {
             votes.splice(currentIndex, 1)
@@ -114,7 +116,7 @@ export default class VotesList extends Component {
             votes.push(this.renderPlaceholder(
                 i, 
                 candidate.id, 
-                <CandidateCard index={i} candidate={candidate} moveCandidate={this.reorder} disabled={this.props.disabled} enableDrop/>
+                <DraggableCandidateCard className="vote-card is-fullwidth" candidate={candidate} onHover={this.reorder} draggable={!this.props.disabled} droppable={!this.props.disabled}/>
             ));
         });
 
@@ -147,7 +149,7 @@ export default class VotesList extends Component {
         const { connectDropTarget, isOver } = this.props;
         //TODO: SOME HOVER EFFECT
         const ui = (
-            <div className="card z-2 is-fullwidth flex flex-col">
+            <div className={"card z-2 is-fullwidth flex flex-col candidate-list " + (isOver ? 'over' : '')}>
                 <div className="card-content flex-none">
                     <div>
                         <h1 className="title has-text-centered">My Ballot</h1>

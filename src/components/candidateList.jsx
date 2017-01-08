@@ -5,7 +5,7 @@ import { DragDropContext, DragSource, DropTarget } from 'react-dnd';
 
 import {Ballot as BallotModel} from '../models/ballot'
 
-import CandidateCard from './candidateCard'
+import {DraggableCandidateCard} from './candidateCard'
 import AnimatedList from './animatedList'
 
 const target = {
@@ -67,7 +67,7 @@ export default class CandidateList extends Component {
 
         //TODO: SOME HOVER EFFECT
         return connectDropTarget(
-            <div className="card z-2 is-fullwidth flex flex-col">
+            <div className={"card z-2 is-fullwidth flex flex-col candidate-list " + (isOver ? 'over' : '')}>
                 <div className="card-content flex-none">
                     <div>
                         <h1 className="title has-text-centered">Candidates</h1>
@@ -80,7 +80,7 @@ export default class CandidateList extends Component {
                     {this.emptyMessage()}
                     <AnimatedList>
                         {this.candidates.map((candidate, i) => (
-                            <CandidateCard key={candidate.id} index={i} candidate={candidate} details disabledDrop/>
+                            <DraggableCandidateCard key={candidate.id} className="card z-1 is-fullwidth" candidate={candidate} details draggable/>
                         ))}
                     </AnimatedList>
                     </div>

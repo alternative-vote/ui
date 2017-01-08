@@ -27,19 +27,49 @@
   border-bottom: 1px solid rgba(0,0,0,0.64)
 }
 
-// .candidate-card.dragging {
-//   opacity: 0;
-//   box-shadow: none;
-//   border: 1px dashed black;
-//   .card-content {
-//     opacity: 0;
-//   }
-// }
-  
-.candidate-card:hover {
+.dragging {
+  box-shadow: none;
+  border: 1px dashed black;
+  * {
+    opacity: 0;
+  }
+}
+
+.candidate-list {
+  border: 1px solid transparent;
+  transition: border 150ms;
+}
+
+.over {
+  border-color: $primary;
+}
+
+
+.draggable-card {
+  transition: all 300ms;
+  user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.draggable-card:hover {
+  @extend .z-2;
   cursor: grab;
   cursor: -webkit-grab; 
   cursor: -moz-grab;
+}
+
+.draggable-card:active { 
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
+}
+
+.dragging-card {
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 .flex {
