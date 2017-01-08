@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { action, observable, toJS } from "mobx";
 import { observer } from "mobx-react";
+import {Motion, TransitionMotion, spring} from 'react-motion';
 
 const PADDING=20
 const DURATION = 300;
@@ -20,7 +21,10 @@ export default class AnimatedList extends Component {
     setYPoisitons = () => {
         const newPositions = {}
 
-        const {container} = this.refs;
+        const {container} = this;
+        if(container == null) {
+            return;
+        }
         const elements = [...container.children];
         React.Children.forEach(this.props.children, (child, i) => {
             const {key} = child;
@@ -43,31 +47,81 @@ export default class AnimatedList extends Component {
     componentDidMount = this.setYPoisitons
     componentDidUpdate = this.setYPoisitons
 
+    getStyles = () => {
+        return this.props.children.map((child, i) => {
+            const {key} = child;
+            const {y, init} = this.positions[key] || {y : 0}
+            let currentY = y;
+            if(init === false) {
+                currentY = spring(y, )
+            }
+
+            return {
+                key,
+                data : { 
+                    child,
+                    finalY : y
+                },
+                style : { 
+                    y : currentY
+                },
+            }
+        })
+    }
+
     render() {
+
+        // {this.props.children.map((child, i) => {
+        //             const {key} = child;
+        //             const {y, init, moving} = this.positions[key] || {};
+
+        //             const style = {
+        //                 width : '100%',
+        //                 position: 'absolute',
+        //                 marginBottom: `${PADDING}px`,
+        //                 transform : y == null ? 'none' : `translateY(${y}px)`,
+        //                 transition : init ? 'none' : TRANSITION,
+        //                 opacity : init ? '0' : '1',
+        //                 pointerEvents : moving ? 'none' : 'auto',
+        //                 // width: init ? '0%' : '100%',
+        //                 // height: init ? '0%' : '100%',
+        //             }
+
+        //             return (
+        //                 <div key={key} style={{...style}} onTransitionEnd={() => this.endAnimation(key)}>
+        //                     {child}
+        //                 </div>
+        //         )})}
+
         return (
-            <div ref="container">
-                {this.props.children.map((child, i) => {
-                    const {key} = child;
-                    const {y, init, moving} = this.positions[key] || {};
+            <TransitionMotion styles={this.getStyles()}>
+                {interpolatedStyles => 
+                    <div id="asdf" ref={el => this.container = el}>
+                        {interpolatedStyles.map(config => {
+                            const {y} = config.style;
+                            const disabled = Math.abs(y - config.data.finalY) > PADDING
+                            
+                            const style = {
+                                width : '100%',
+                                position: 'absolute',
+                                marginBottom: `${PADDING}px`,
+                                transform : y == null ? 'none' : `translateY(${y}px)`,
+                                pointerEvents : disabled ? 'none' : 'auto',
+                                // transition : init ? 'none' : TRANSITION,
+                                // opacity : init ? '0' : '1',
+                                // width: init ? '0%' : '100%',
+                                // height: init ? '0%' : '100%',
+                            }
 
-                    const style = {
-                        width : '100%',
-                        position: 'absolute',
-                        marginBottom: `${PADDING}px`,
-                        transform : y == null ? 'none' : `translateY(${y}px)`,
-                        transition : init ? 'none' : TRANSITION,
-                        opacity : init ? '0' : '1',
-                        pointerEvents : moving ? 'none' : 'auto',
-                        // width: init ? '0%' : '100%',
-                        // height: init ? '0%' : '100%',
-                    }
-
-                    return (
-                        <div key={key} style={{...style}} onTransitionEnd={() => this.endAnimation(key)}>
-                            {child}
-                        </div>
-                )})}
-            </div>
+                            return (
+                                <div key={config.key} style={{...style}}>
+                                    {config.data.child}
+                                </div>
+                            )
+                        })}
+                    </div>
+                }
+            </TransitionMotion>
         )
     }
 }

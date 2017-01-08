@@ -5,6 +5,29 @@ import {Ballot} from '../models/ballot'
 
 const delay = 1 * 10
 
+
+const votr = new Candidate()
+votr.id = 0
+votr.title = 'Votr'
+votr.subtitle = 'Chris Langager, Erin Noe-Payne'
+votr.description = 'The worlds best voting website'
+
+const netmon = new Candidate()
+netmon.id = 1
+netmon.title = 'Netmon 20k'
+netmon.subtitle = 'Kjell Hedstrom, Alex Weltman'
+netmon.description = 'Much higher throughput at the netmon parsing layer.'
+
+const wcui = new Candidate()
+wcui.id = 2
+wcui.title = 'Web Console Twilight Mode'
+wcui.subtitle = 'Matt Petersen, Jamie Ottersetter, Nicholas Boll'
+wcui.description = 'A framework for adding extensible color palettes to the web console.'
+
+const candidates = [
+    votr, netmon, wcui
+]
+
 class ElectionService {
 
     create() {
@@ -50,9 +73,7 @@ class ElectionService {
             wcui.subtitle = 'Matt Petersen, Jamie Ottersetter, Nicholas Boll'
             wcui.description = 'A framework for adding extensible color palettes to the web console.'
 
-            election.candidates = [
-                votr, netmon, wcui
-            ]
+            election.candidates = candidates;
 
             return election
         })
@@ -60,7 +81,9 @@ class ElectionService {
 
     getBallot(electionId, userId) {
         return q.delay(delay).then(() => {
-            return new Ballot()
+            const ballot = new Ballot()
+            ballot.votes = candidates;
+            return ballot;
         })
     }
 

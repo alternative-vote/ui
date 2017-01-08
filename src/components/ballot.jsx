@@ -20,7 +20,8 @@ import CardDragLayer from './dragLayer'
 const card_TYPE = 'card'
 
 //TODO: switch html5 / touch backends
-@DragDropContext(TouchBackend({enableMouseEvents: true}))
+// @DragDropContext(TouchBackend({enableMouseEvents: true}))
+@DragDropContext(HTML5Backend)
 @observer
 class Ballot extends Component {
     static propTypes = {
