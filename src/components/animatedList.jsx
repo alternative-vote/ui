@@ -53,7 +53,7 @@ export default class AnimatedList extends Component {
             const {y, init} = this.positions[key] || {y : 0}
             let currentY = y;
             if(init === false) {
-                currentY = spring(y, )
+                currentY = spring(y)
             }
 
             return {
@@ -63,42 +63,45 @@ export default class AnimatedList extends Component {
                     finalY : y
                 },
                 style : { 
-                    y : currentY
+                    y : currentY,
+                    opacity : 1,
                 },
             }
         })
     }
 
+    willEnter = (currentStyle) => {
+        let currentY = currentStyle.style.y;
+        if (currentY.val != null) {
+            currentY = currentY.val;
+        }
+        return {
+            y : currentY,
+            opacity : spring(1)
+        }
+    }
+
+    willLeave = (currentStyle) => {
+        let currentY = currentStyle.style.y;
+        if (currentY.val != null) {
+            currentY = currentY.val;
+        }
+        return {
+            y : currentY,
+            opacity : spring(0)
+        }
+    }
+
     render() {
-
-        // {this.props.children.map((child, i) => {
-        //             const {key} = child;
-        //             const {y, init, moving} = this.positions[key] || {};
-
-        //             const style = {
-        //                 width : '100%',
-        //                 position: 'absolute',
-        //                 marginBottom: `${PADDING}px`,
-        //                 transform : y == null ? 'none' : `translateY(${y}px)`,
-        //                 transition : init ? 'none' : TRANSITION,
-        //                 opacity : init ? '0' : '1',
-        //                 pointerEvents : moving ? 'none' : 'auto',
-        //                 // width: init ? '0%' : '100%',
-        //                 // height: init ? '0%' : '100%',
-        //             }
-
-        //             return (
-        //                 <div key={key} style={{...style}} onTransitionEnd={() => this.endAnimation(key)}>
-        //                     {child}
-        //                 </div>
-        //         )})}
-
         return (
-            <TransitionMotion styles={this.getStyles()}>
+            <TransitionMotion 
+                // willEnter={this.willEnter}
+                // willLeave={this.willLeave}
+                styles={this.getStyles()}>
                 {interpolatedStyles => 
-                    <div id="asdf" ref={el => this.container = el}>
+                    <div ref={el => this.container = el}>
                         {interpolatedStyles.map(config => {
-                            const {y} = config.style;
+                            const {y, opacity} = config.style;
                             const disabled = Math.abs(y - config.data.finalY) > PADDING
                             
                             const style = {
@@ -107,6 +110,7 @@ export default class AnimatedList extends Component {
                                 marginBottom: `${PADDING}px`,
                                 transform : y == null ? 'none' : `translateY(${y}px)`,
                                 pointerEvents : disabled ? 'none' : 'auto',
+                                opacity : opacity == null ? '1' : opacity,
                                 // transition : init ? 'none' : TRANSITION,
                                 // opacity : init ? '0' : '1',
                                 // width: init ? '0%' : '100%',

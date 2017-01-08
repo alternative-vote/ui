@@ -6,6 +6,8 @@ import {Ballot as BallotModel} from '../models/ballot'
 import {Candidate} from '../models/election'
 import _  from 'lodash'
 
+import {StaggeredMotion, spring} from 'react-motion';
+
 import { DragDropContext, DragSource, DropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import TouchBackend from 'react-dnd-touch-backend';
@@ -20,8 +22,8 @@ import CardDragLayer from './dragLayer'
 const card_TYPE = 'card'
 
 //TODO: switch html5 / touch backends
-// @DragDropContext(TouchBackend({enableMouseEvents: true}))
-@DragDropContext(HTML5Backend)
+@DragDropContext(TouchBackend({enableMouseEvents: true}))
+// @DragDropContext(HTML5Backend)
 @observer
 class Ballot extends Component {
     static propTypes = {
@@ -45,28 +47,131 @@ class Ballot extends Component {
         return targetIndex
     }
 
-    candidateList = () => {
+    getCandidateListStyle = () => {
         if (this.props.disabled) {
-            return ''
-        }  
+            return {
+                height : spring(0),
+                width : spring(0),
+                opacity : spring(0),
+                innerOpacity : spring(0),
+            }
+        } else {
+            return {
+                height : spring(100),
+                width : spring(33.33333),
+                opacity : spring(1),
+                innerOpacity : spring(1, {stiffness: 1000}),
+            }
+        }
+    }
+
+    getVoteListStyle = () => {
         
-        return (
-            <div className="column is-one-third flex">
-                <CandidateList ballot={this.props.ballot} candidates={this.props.candidates} disabled={this.props.disabled}/>
-            </div>
-        )
+    }
+
+    // candidateList = () => {
+    //     return (
+    //         <Motion
+    //             style={this.getCandidateListStyle()}>
+    //             {interpolatedStyle => {
+    //                 const {height, width, opacity, innerOpacity} = interpolatedStyle;
+    //                 const style = {
+    //                     overflow : 'visible',
+    //                     alignSelf : 'center',
+    //                     position : 'absolute',
+    //                     height : `${height}%`,
+    //                     width : `${width}%`,
+    //                     opacity : opacity,
+    //                 }
+
+    //                 const innerStyle = {
+    //                     // position : 'absolute',
+    //                     // height : '100%',
+    //                     opacity : innerOpacity,
+    //                 }
+    //                 return (
+    //                     <div className="column is-4 flex" style={style}>
+    //                         <CandidateList style={innerStyle} ballot={this.props.ballot} candidates={this.props.candidates} disabled={this.props.disabled}/>
+    //                     </div>
+    //                 )
+    //             }}
+    //         </Motion>
+    //     )
+    // }
+
+    getStyles = () => {
+        console.log('getstyles');
+        
+        const oneSixth = (1/6) * 100;
+        if(this.props.disabled) {
+            return [
+                {
+                    opacity : spring(0, {stiffness: 1000}), 
+                    none : 0,
+                }, {
+                    height : spring(0),
+                    width : spring(0),
+                    opacity : spring(0), 
+                }, {
+                    marginLeft : spring(oneSixth)
+                },
+            ]
+        }
+
+        return [
+            {
+                opacity : spring(1), 
+                none : 1000,
+            }, {
+                height : spring(100),
+                width : spring(2 * oneSixth),
+                opacity : spring(1, {stiffness: 1000}), 
+            }, {
+                marginLeft : spring(2 * oneSixth)
+            },
+        ]
     }
 
     render() {
         return (
+            
             <div className="flex flex-col flex-auto">
                 <CardDragLayer candidates={this.props.candidates}></CardDragLayer>
-                <div className="columns flex-auto">
-                    {this.candidateList()}
-                    <div className="column flex">
-                        <VotesList ballot={this.props.ballot} candidates={this.props.candidates} disabled={this.props.disabled}/>
-                    </div>
-                </div>
+                    <StaggeredMotion styles={this.getStyles}>
+                    {interpolatedStyles => {
+                        let [ innerStyle, leftStyle, rightStyle ] = interpolatedStyles;
+
+                        innerStyle = {
+                            opacity: innerStyle.opacity,
+                            display : innerStyle.opacity <= 0 ? 'none' : null
+                        }
+
+                        leftStyle = {
+                            position : 'absolute',
+                            alignSelf : 'center',
+                            height : `${leftStyle.height}%`,
+                            width : `${leftStyle.width}%`,
+                            opacity : leftStyle.opacity,
+                        }
+
+                        rightStyle = {
+                            marginLeft : `${rightStyle.marginLeft}%`
+                        }
+
+                        return (
+                            <div className="columns flex-auto" style={{position : 'relative'}}>
+                                <div className="column is-4 flex" style={leftStyle}>
+                                    <CandidateList style={innerStyle} ballot={this.props.ballot} candidates={this.props.candidates} disabled={this.props.disabled}/>
+                                </div>
+                                <div className={"column is-8 flex" + (this.props.disabled ? " is-offset-2" : " is-offset-4")} style={rightStyle}>
+                                    <VotesList ballot={this.props.ballot} candidates={this.props.candidates} disabled={this.props.disabled}/>
+                                </div>
+                            </div>
+                        )
+                        // return <div>Hello world</div>
+                    }}
+                    
+                    </StaggeredMotion>
             </div>
         )
     }

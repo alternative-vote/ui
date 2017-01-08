@@ -67,7 +67,7 @@ export default class CandidateList extends Component {
 
         //TODO: SOME HOVER EFFECT
         return connectDropTarget(
-            <div className={"card z-2 is-fullwidth flex flex-col candidate-list " + (isOver ? 'over' : '')}>
+            <div style={this.props.style} className={"card z-2 is-fullwidth flex flex-col candidate-list " + (isOver ? 'over' : '')}>
                 <div className="card-content flex-none">
                     <div>
                         <h1 className="title has-text-centered">Candidates</h1>
