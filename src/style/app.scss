@@ -27,13 +27,14 @@
   border-bottom: 1px solid rgba(0,0,0,0.64)
 }
 
-.candidate-card.dragging {
-  box-shadow: none;
-  border: 1px dashed black;
-  .card-content {
-    opacity: 0;
-  }
-}
+// .candidate-card.dragging {
+//   opacity: 0;
+//   box-shadow: none;
+//   border: 1px dashed black;
+//   .card-content {
+//     opacity: 0;
+//   }
+// }
   
 .candidate-card:hover {
   cursor: grab;

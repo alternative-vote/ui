@@ -28,8 +28,7 @@ const cardTarget = {
         if (dragIndex === hoverIndex) {
             return;
         }
-
-        // Time to actually perform the action
+        
         monitor.getItem().index = props.moveCandidate(candidateId, hoverIndex);
     }
 }

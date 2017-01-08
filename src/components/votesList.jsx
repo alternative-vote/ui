@@ -5,6 +5,7 @@ import { DragDropContext, DragSource, DropTarget } from 'react-dnd';
 
 import {Ballot as BallotModel} from '../models/ballot'
 
+import AnimatedList from './animatedList'
 import CandidateCard from './candidateCard'
 
 const target = {
@@ -92,36 +93,7 @@ export default class VotesList extends Component {
         )
     }
 
-    renderCandidate = (candidate, i) => {
-        let card = ''
-        let key = ''
-        if (candidate == null) {
-            if(this.props.disabled) {
-                if (this.props.ballot.votes.length == 0) {
-                    return (
-                        <div className="has-text-centered">
-                        <small>This ballot is empty.</small>
-                        </div>
-                    )
-                } else {
-                    return ''
-                }
-            }
-            if(this.props.ballot.votes.length == this.props.candidates.length) {
-                return ''
-            }
-
-            i = this.props.ballot.votes.length
-            card = (
-                <div className="placeholder"></div>
-            )
-        } else {
-            card = (
-                <CandidateCard key={candidate.id} index={i} candidate={candidate} moveCandidate={this.reorder} disabled={this.props.disabled} enableDrop/>
-            )
-            key = candidate.id
-        }
-
+    renderPlaceholder(i, key, content) {
         return (
             <div className="level columns" key={key}>
                 <div className="level-left column is-1">
@@ -130,10 +102,45 @@ export default class VotesList extends Component {
                     </div>
                 </div>
                 <div className="level-item column">
-                    {card}
+                    {content}
                 </div>
             </div>
         )
+    }
+
+    getVotes() {
+        const votes = []
+        this.props.ballot.votes.forEach((candidate, i) => {
+            votes.push(this.renderPlaceholder(
+                i, 
+                candidate.id, 
+                <CandidateCard index={i} candidate={candidate} moveCandidate={this.reorder} disabled={this.props.disabled} enableDrop/>
+            ));
+        });
+
+        //If ballot is disabled and empty
+        if(this.props.disabled && this.props.ballot.votes.length == 0) {
+            votes.push((
+                <div className="has-text-centered">
+                    <small>This ballot is empty.</small>
+                </div>
+            ))
+        }
+
+        //If ballot is enabled and full
+        if(!this.props.disabled && this.props.ballot.votes.length != this.props.candidates.length) {
+            votes.push(this.renderPlaceholder(
+                this.props.ballot.votes.length,
+                '_placeholder',
+                <div className="placeholder"></div>
+            ))
+        }
+
+        if(votes.length == 0) {
+            return null;
+        }
+
+        return votes;
     }
 
     render() {
@@ -150,9 +157,10 @@ export default class VotesList extends Component {
                     <div className="scroll-fade-top"></div>
                     <div className="card-content flex-auto scroll">
                         <div className="columns">
-                            <div className="column is-8 is-offset-2">
-                                {this.props.ballot.votes.map(this.renderCandidate)}
-                                {this.renderCandidate()}
+                            <div className="column is-8 is-offset-2" style={{position: 'relative'}}>
+                                <AnimatedList>
+                                    {this.getVotes()}
+                                </AnimatedList>
                             </div>
                         </div>
                     </div>
