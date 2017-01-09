@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { action } from "mobx";
+import { action, observable, toJS } from "mobx";
 import { observer } from "mobx-react";
 import { DragDropContext, DragSource, DropTarget } from 'react-dnd';
 import {Motion, spring} from 'react-motion';
+import _ from 'lodash';
 
 import {Ballot as BallotModel} from '../models/ballot'
 
 import {DraggableCandidateCard} from './candidateCard'
 import AnimatedList from './animatedList'
+
 
 const target = {
     @action
@@ -95,64 +97,65 @@ export default class VotesList extends Component {
         )
     }
 
-    renderPlaceholder(i, key, content) {
-        return (
-            <div className="level columns" key={key}>
-                <div className="level-left column is-1">
-                    <div className="level-item">
-                        <h1 className="title">{i+1}</h1>
-                    </div>
-                </div>
-                <div className="level-item column">
-                    {content}
-                </div>
-            </div>
-        )
-    }
+    // renderPlaceholder(i, key, content) {
+    //     return (
+    //         <div className="level columns" key={key}>
+    //             <div className="level-left column is-1">
+    //                 <div className="level-item">
+    //                     <h1 className="title">{i+1}</h1>
+    //                 </div>
+    //             </div>
+    //             <div className="level-item column">
+    //                 {content}
+    //             </div>
+    //         </div>
+    //     )
+    // }
 
-    getVotes() {
-        const votes = []
+    getItems() {
+        const items = []
+
         this.props.ballot.votes.forEach((candidate, i) => {
-            votes.push(this.renderPlaceholder(
-                i, 
-                candidate.id, 
-                <DraggableCandidateCard className={"is-fullwidth" + (this.props.disabled ? "" : " card z-1")}
+            items.push(
+                <DraggableCandidateCard key={candidate.id} className={"is-fullwidth" + (this.props.disabled ? "" : " card z-1")}
                     style={{transition : 'all 250ms ease-out'}}
                     candidate={candidate} 
                     onHover={this.reorder} 
                     draggable={!this.props.disabled} 
                     droppable={!this.props.disabled}/>
-            ));
+            );
         });
 
         //If ballot is disabled and empty
-        if(this.props.disabled && this.props.ballot.votes.length == 0) {
-            votes.push((
-                <div className="has-text-centered">
-                    <small>This ballot is empty.</small>
-                </div>
-            ))
-        }
+        // if(this.props.disabled && this.props.ballot.votes.length == 0) {
+        //     items.push(
+        //         <div key="_emptyMessage" className="has-text-centered">
+        //             <small>This ballot is empty.</small>
+        //         </div>
+        //     )
+        // }
 
         //If ballot is enabled and full
         if(!this.props.disabled && this.props.ballot.votes.length != this.props.candidates.length) {
-            votes.push(this.renderPlaceholder(
-                this.props.ballot.votes.length,
-                '_placeholder',
-                <div className="placeholder"></div>
-            ))
+            items.push(
+                <div key="_placeholder" className="placeholder"></div>
+            )
         }
 
-        if(votes.length == 0) {
-            return null;
-        }
+        // if(items.length == 0) {
+        //     return null;
+        // }
 
-        return votes;
+        return items;
     }
+
+    @observable
+    yPositions = []
 
     render() {
         const { connectDropTarget, isOver } = this.props;
-        //TODO: SOME HOVER EFFECT
+        const items = this.getItems();
+
         const ui = (
             <div className={"card z-2 is-fullwidth flex flex-col candidate-list " + (isOver ? 'over' : '')}>
                 <div className="card-content flex-none">
@@ -165,9 +168,27 @@ export default class VotesList extends Component {
                     <div className="card-content flex-auto scroll">
                         <div className="columns">
                             <div className="column is-8 is-offset-2" style={{position: 'relative'}}>
-                                <AnimatedList>
-                                    {this.getVotes()}
-                                </AnimatedList>
+                                <div className="columns">
+                                    {(this.props.disabled && items.length == 0) ? (
+                                        <div className="column is-12 has-text-centered">
+                                            <small>This ballot is empty.</small>
+                                        </div>
+                                    ) : null}
+                                    <div className="column is-1">
+                                        <AnimatedList fixedHeight={95} animateEnterLeave={!this.props.disabled} >
+                                            {items.map((vote, i) => 
+                                                <div key={i} className="flex" style={{height: '75px', alignItems: 'center'}}>
+                                                    <h1  className="title">{i+1}</h1>
+                                                </div>
+                                            )}
+                                        </AnimatedList>
+                                    </div>
+                                    <div className="column">
+                                         <AnimatedList fixedHeight={95} >
+                                            {items}
+                                        </AnimatedList>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -24,8 +24,14 @@ wcui.title = 'Web Console Twilight Mode'
 wcui.subtitle = 'Matt Petersen, Jamie Ottersetter, Nicholas Boll'
 wcui.description = 'A framework for adding extensible color palettes to the web console.'
 
+const long = new Candidate()
+long.id = 3
+long.title = 'An election with a very very long title that is super duper ultra long god damn it is so long its not even a joke'
+long.subtitle = 'It also has a subtitle that just seems to go on and on forever without an perceivable end, because it just wont quit UGH'
+long.description = 'I guess it has a description though'
+
 const candidates = [
-    votr, netmon, wcui
+    votr, netmon, wcui, long
 ]
 
 class ElectionService {
@@ -54,24 +60,6 @@ class ElectionService {
             election.subtitle = "2017"
             election.description = "The best and brightest of logrhythm compete in a hackathon for cash money."
             election.state = "running"
-
-            const votr = new Candidate()
-            votr.id = 0
-            votr.title = 'Votr'
-            votr.subtitle = 'Chris Langager, Erin Noe-Payne'
-            votr.description = 'The worlds best voting website'
-
-            const netmon = new Candidate()
-            netmon.id = 1
-            netmon.title = 'Netmon 20k'
-            netmon.subtitle = 'Kjell Hedstrom, Alex Weltman'
-            netmon.description = 'Much higher throughput at the netmon parsing layer.'
-
-            const wcui = new Candidate()
-            wcui.id = 2
-            wcui.title = 'Web Console Twilight Mode'
-            wcui.subtitle = 'Matt Petersen, Jamie Ottersetter, Nicholas Boll'
-            wcui.description = 'A framework for adding extensible color palettes to the web console.'
 
             election.candidates = candidates;
 

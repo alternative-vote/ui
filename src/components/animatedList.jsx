@@ -10,6 +10,20 @@ const TRANSITION = `transform ${DURATION}ms ${EASE}, opacity ${DURATION * 0.8}ms
 
 @observer
 export default class AnimatedList extends Component {
+    static propTypes = {
+        fixedHeight : React.PropTypes.number, 
+        animateEnterLeave : React.PropTypes.bool, 
+    }
+
+    constructor(props) {
+        super(props)
+
+        if (this.props.fixedHeight == null) {
+            this.componentDidMount = this.setYPoisitons
+            this.componentDidUpdate = this.setYPoisitons
+        }
+    }
+
     @observable
     positions = {};
 
@@ -44,16 +58,25 @@ export default class AnimatedList extends Component {
             this.positions = newPositions;
         }
     }
-    componentDidMount = this.setYPoisitons
-    componentDidUpdate = this.setYPoisitons
 
     getStyles = () => {
         return React.Children.map(this.props.children, (child, i) => {
+            const {fixedHeight} = this.props;
             const {key} = child;
-            const {y, init} = this.positions[key] || {y : 0}
-            let currentY = y;
-            if(init === false) {
-                currentY = spring(y)
+
+            let y, currentY;
+            if(fixedHeight == null) {
+                const position = this.positions[key] || {}
+                const y = position.y || 0;
+                const init = position.init || false;
+
+                currentY = y;
+                if(init === false) {
+                    currentY = spring(y)
+                }    
+            } else {
+                y = i * fixedHeight;
+                currentY = spring(y);
             }
 
             return {
@@ -95,10 +118,17 @@ export default class AnimatedList extends Component {
     }
 
     render() {
+        let transitions = {}
+        if (this.props.animateEnterLeave) {
+            transitions = {
+                willEnter : this.willEnter,
+                willLeave : this.willLeave
+            }
+        }
+
         return (
             <TransitionMotion 
-                // willEnter={this.willEnter}
-                // willLeave={this.willLeave}
+                {...transitions}
                 styles={this.getStyles()}>
                 {interpolatedStyles => 
                     <div ref={el => this.container = el}>

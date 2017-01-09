@@ -44,11 +44,23 @@ export class CandidateCard extends Component {
     }
 
     render() {
+        let style = {
+            display : 'block',
+        }
+        if (!this.props.details) {
+            style = {
+                display : 'block',
+                overflow : 'hidden',
+                textOverflow : 'ellipsis',
+                whiteSpace : 'nowrap',
+            }
+        }
+
         return (
             <div className={this.props.className} style={this.props.style}>
             <div className="card-content">
-                <strong>{this.props.candidate.title}</strong><br/>
-                <small>{this.props.candidate.subtitle}</small><br/>
+                <strong style={style}>{this.props.candidate.title}</strong>
+                <small style={style}>{this.props.candidate.subtitle}</small>
                 {this.props.details ? this.props.candidate.description : ''}
             </div>
             </div>
