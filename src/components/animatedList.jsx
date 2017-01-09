@@ -48,7 +48,7 @@ export default class AnimatedList extends Component {
     componentDidUpdate = this.setYPoisitons
 
     getStyles = () => {
-        return this.props.children.map((child, i) => {
+        return React.Children.map(this.props.children, (child, i) => {
             const {key} = child;
             const {y, init} = this.positions[key] || {y : 0}
             let currentY = y;
@@ -64,10 +64,10 @@ export default class AnimatedList extends Component {
                 },
                 style : { 
                     y : currentY,
-                    opacity : 1,
+                    opacity : spring(1),
                 },
             }
-        })
+        }) || []
     }
 
     willEnter = (currentStyle) => {
@@ -77,7 +77,7 @@ export default class AnimatedList extends Component {
         }
         return {
             y : currentY,
-            opacity : spring(1)
+            opacity : 0
         }
     }
 
@@ -90,6 +90,8 @@ export default class AnimatedList extends Component {
             y : currentY,
             opacity : spring(0)
         }
+
+        // return null;
     }
 
     render() {

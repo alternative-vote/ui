@@ -116,7 +116,12 @@ export default class VotesList extends Component {
             votes.push(this.renderPlaceholder(
                 i, 
                 candidate.id, 
-                <DraggableCandidateCard className="vote-card is-fullwidth" candidate={candidate} onHover={this.reorder} draggable={!this.props.disabled} droppable={!this.props.disabled}/>
+                <DraggableCandidateCard className={"is-fullwidth" + (this.props.disabled ? "" : " card z-1")}
+                    style={{transition : 'all 250ms ease-out'}}
+                    candidate={candidate} 
+                    onHover={this.reorder} 
+                    draggable={!this.props.disabled} 
+                    droppable={!this.props.disabled}/>
             ));
         });
 

@@ -45,7 +45,7 @@ export class CandidateCard extends Component {
 
     render() {
         return (
-            <div className={this.props.className}>
+            <div className={this.props.className} style={this.props.style}>
             <div className="card-content">
                 <strong>{this.props.candidate.title}</strong><br/>
                 <small>{this.props.candidate.subtitle}</small><br/>
