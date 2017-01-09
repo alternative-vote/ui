@@ -33,7 +33,6 @@ class App extends Component {
           <Route path="/elections/:electionId/vote" component={VotePage}/>
           <Route path="*" component={NotFoundPage}/>
         </Router>
-        <DevTools />
       </div>
     );
   }

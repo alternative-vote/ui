@@ -32,76 +32,7 @@ class Ballot extends Component {
         candidates : React.PropTypes.any.isRequired,
     }
 
-    getUnusedCandidates = () => {
-        return _.difference(this.props.candidates, this.props.ballot.votes)
-    }
-
-    @action
-    moveCandidate = (cardId, targetIndex) => {
-        const candidates = this.props.candidates
-        const currentIndex = _.findIndex(candidates, {id : cardId})
-        const card = candidates[currentIndex]
-        candidates.splice(currentIndex, 1)
-        candidates.splice(targetIndex, 0, card)
-
-        return targetIndex
-    }
-
-    getCandidateListStyle = () => {
-        if (this.props.disabled) {
-            return {
-                height : spring(0),
-                width : spring(0),
-                opacity : spring(0),
-                innerOpacity : spring(0),
-            }
-        } else {
-            return {
-                height : spring(100),
-                width : spring(33.33333),
-                opacity : spring(1),
-                innerOpacity : spring(1, {stiffness: 1000}),
-            }
-        }
-    }
-
-    getVoteListStyle = () => {
-        
-    }
-
-    // candidateList = () => {
-    //     return (
-    //         <Motion
-    //             style={this.getCandidateListStyle()}>
-    //             {interpolatedStyle => {
-    //                 const {height, width, opacity, innerOpacity} = interpolatedStyle;
-    //                 const style = {
-    //                     overflow : 'visible',
-    //                     alignSelf : 'center',
-    //                     position : 'absolute',
-    //                     height : `${height}%`,
-    //                     width : `${width}%`,
-    //                     opacity : opacity,
-    //                 }
-
-    //                 const innerStyle = {
-    //                     // position : 'absolute',
-    //                     // height : '100%',
-    //                     opacity : innerOpacity,
-    //                 }
-    //                 return (
-    //                     <div className="column is-4 flex" style={style}>
-    //                         <CandidateList style={innerStyle} ballot={this.props.ballot} candidates={this.props.candidates} disabled={this.props.disabled}/>
-    //                     </div>
-    //                 )
-    //             }}
-    //         </Motion>
-    //     )
-    // }
-
     getStyles = () => {
-        console.log('getstyles');
-        
         if(this.props.disabled) {
             return {
                 opacity : spring(0),
@@ -133,14 +64,12 @@ class Ballot extends Component {
                     const leftStyle = {
                         height : '100%',
                         position : 'absolute',
-                        // marginLeft : `${left}%`,
                         transform : `translateX(${candidatesLeft}%)`,
                         opacity : opacity,
                     }
 
                     const rightStyle = {
                         transform : `translateX(${votesLeft}%)`,
-                        // marginLeft : `${marginLeft}%`
                     }
 
                     return (
@@ -153,7 +82,6 @@ class Ballot extends Component {
                             </div>
                         </div>
                     )
-                    // return <div>Hello world</div>
                 }}
                 
                 </Motion>
