@@ -6,6 +6,7 @@ import auth from '../services/auth'
 import election from '../services/election'
 
 import {Link} from 'react-router';
+import {Motion, spring} from 'react-motion';
 import Halogen from 'halogen';
 
 import Ballot from '../components/ballot'
@@ -57,6 +58,11 @@ class VotePage extends Component {
   cancelConfirmation = () => {
     this.state.isConfirming = false
   }
+  
+  @action
+  submit = () => {
+    this.state.ballot.isSubmitted = true
+  }
 
   isBallotDisabled = () => {
     return this.state.isConfirming || this.state.ballot.isSubmitted
@@ -89,26 +95,72 @@ class VotePage extends Component {
     )
   }
 
-  footerButtons = () => {
-    if (this.state.isConfirming) { 
-      return (
-        <div className="nav-right">
-          <div className="nav-item">
-            <button className="button" onClick={this.cancelConfirmation}>Cancel</button>
-          </div>
-          <div className="nav-item">
-            <button className="button" onClick={this.startConfirmation}>Confirm</button>
-          </div>
-        </div>
-      )
-    } 
+  flipButtons = () => {
+    if((this.state.ballot || {}).isSubmitted) {
+      console.log('spring to 2')
+      return {
+        rotation: spring(2),
+      }
+    }
+    if(this.state.isConfirming) {
+      console.log('spring to 1')
+      return {
+        rotation: spring(1),
+      }
+    }
+    console.log('spring to 0')
+    return {
+      rotation: spring(0),
+    }
+  }
 
+  footerButtons = () => {
     return (
-      <div className="nav-right">
-        <div className="nav-item">
-          <button className="button" onClick={this.startConfirmation}>Submit</button>
-        </div>
-      </div>
+    <Motion style={this.flipButtons()}>
+      {interpolatedStyle => {
+        const {rotation} = interpolatedStyle;
+
+        //-0.5 -> 0 -> 0.5 90 - Math.abs()
+        const deg = 90 - (Math.abs((rotation % 1) - 0.5) * 180)
+
+        const style = {
+          transform : `rotateX(${deg}deg)`
+        }
+        
+        let dom = (
+          <div className="nav-right">
+            <div className="nav-item">
+              <button className="button" onClick={this.startConfirmation} style={style}>Submit</button>
+            </div>
+          </div>
+        )
+        if(rotation > 0.5) {
+          dom = (
+            <div className="nav-right">
+              <div className="nav-item">
+                <button className="button" onClick={this.cancelConfirmation} style={style}>Cancel</button>
+              </div>
+              <div className="nav-item">
+                <button className="button" onClick={this.submit} style={style}>Confirm</button>
+              </div>
+            </div>
+          )
+        }
+        if(rotation > 1.5) {
+          style.opacity=0;
+          
+          dom = (
+            <div className="nav-right">
+              <div className="nav-item">
+                <button className="button" style={style}>Placeholder for sizing</button>
+              </div>
+            </div>
+          )
+        }
+
+        return dom;
+      }}
+      </Motion>
     )
   }
 
