@@ -53,6 +53,7 @@ export class CandidateCard extends Component {
                 overflow : 'hidden',
                 textOverflow : 'ellipsis',
                 whiteSpace : 'nowrap',
+                userSelect: 'none',
             }
         }
 

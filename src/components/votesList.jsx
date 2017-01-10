@@ -168,14 +168,14 @@ export default class VotesList extends Component {
                     <div className="card-content flex-auto scroll">
                         <div className="columns">
                             <div className="column is-8 is-offset-2" style={{position: 'relative'}}>
-                                <div className="columns">
-                                    {(this.props.disabled && items.length == 0) ? (
-                                        <div className="column is-12 has-text-centered">
+                                {(this.props.disabled && items.length == 0) ? (
+                                        <div className="has-text-centered">
                                             <small>This ballot is empty.</small>
                                         </div>
-                                    ) : null}
+                                ) : null}
+                                <div className="columns">
                                     <div className="column is-1">
-                                        <AnimatedList fixedHeight={95} animateEnterLeave={!this.props.disabled} >
+                                        <AnimatedList fixedHeight={95} animateEnterLeave >
                                             {items.map((vote, i) => 
                                                 <div key={i} className="flex" style={{height: '75px', alignItems: 'center'}}>
                                                     <h1  className="title">{i+1}</h1>
