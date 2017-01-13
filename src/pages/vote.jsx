@@ -35,13 +35,10 @@ class VotePage extends Component {
   constructor(props) {
     super(props)
 
-    const electionId = this.props.params.electionId
+    const hash = this.props.params.hash
     const userId = 'asdf'
 
-    q.all([
-      election.getById(this.props.params.electionId),
-      election.getBallot(electionId, userId),
-    ]).spread((election, ballot)=>{
+    election.getFromHash(hash).then(({election, ballot})=>{
       this.state.election = election
       this.state.ballot = ballot
     }).finally(() => {
@@ -130,7 +127,7 @@ class VotePage extends Component {
         let dom = (
           <div className="nav-right">
             <div className="nav-item">
-              <button className="button" onClick={this.startConfirmation} style={style}>Submit</button>
+              <button className="button is-primary" onClick={this.startConfirmation} style={style}>Submit</button>
             </div>
           </div>
         )
@@ -141,7 +138,7 @@ class VotePage extends Component {
                 <button className="button" onClick={this.cancelConfirmation} style={style}>Cancel</button>
               </div>
               <div className="nav-item">
-                <button className="button" onClick={this.submit} style={style}>Confirm</button>
+                <button className="button is-primary" onClick={this.submit} style={style}>Confirm</button>
               </div>
             </div>
           )
@@ -158,7 +155,19 @@ class VotePage extends Component {
           )
         }
 
-        return dom;
+        return (
+          <div className="level">
+            <div className="level-item">
+            <div className="notification">
+            </div>
+            </div>
+            <div className="level-right">
+              <div className="level-item">
+                {dom}
+              </div>
+            </div>
+          </div>
+        );
       }}
       </Motion>
     )
@@ -173,7 +182,7 @@ class VotePage extends Component {
             <nav className="nav">
               <div className="nav-left">
                 <Link className="nav-item" to="/">
-                  <h1 className="title">Votr</h1>
+                  <h1 className="title">electioneer.io</h1>
                 </Link> 
               </div>
             </nav>
@@ -182,16 +191,13 @@ class VotePage extends Component {
         </header>
         <section className="section flex flex-col flex-auto scroll main-content">
           {this.ballot()}
-        </section>
-        <footer className="hero is-primary flex-none">
-          <div className="hero-head">
           <div className="container">
-          <div className="nav">
+          <div className="card-content flex-none">
             {this.footerButtons()}
           </div>
           </div>
-          </div>
-        </footer>
+        </section>
+        
       </div>
     );
   }

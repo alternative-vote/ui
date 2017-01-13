@@ -8,9 +8,9 @@ const delay = 1 * 10
 
 const votr = new Candidate()
 votr.id = 0
-votr.title = 'Votr'
-votr.subtitle = 'Chris Langager, Erin Noe-Payne'
-votr.description = 'The worlds best voting website'
+votr.title = 'AIE Log Attribution'
+votr.subtitle = 'John Ryden, Mario Amato, Phil Barilla'
+votr.description = 'Associates logs with aie alarms at the time they are produced.'
 
 const netmon = new Candidate()
 netmon.id = 1
@@ -56,8 +56,8 @@ class ElectionService {
         return q.delay(delay).then(() => {
             const election = new Election()
             election.id = electionId
-            election.title = "Test election"
-            election.subtitle = "2017"
+            election.title = "LogRhythm Hackathon"
+            election.subtitle = "Q1 2017"
             election.description = "The best and brightest of logrhythm compete in a hackathon for cash money."
             election.state = "running"
 
@@ -73,6 +73,15 @@ class ElectionService {
             ballot.votes = candidates;
             return ballot;
         })
+    }
+
+    getFromHash(hash) {
+        return q.all([
+           this.getById(),
+           this.getBallot(),
+        ]).spread((election, ballot) => {
+            return { election, ballot }
+        });
     }
 
     save(election) {

@@ -29,6 +29,10 @@ function collector(connect, monitor) {
     };
 }
 
+function includes(str, substring) {
+    return str.toLowerCase().includes(substring.toLowerCase())
+}
+
 @DropTarget('candidate', target, collector)
 @observer
 export default class CandidateList extends Component {
@@ -40,12 +44,27 @@ export default class CandidateList extends Component {
     @observable
     candidates = []
 
+    @observable
+    filter = '';
+
     constructor(props) {
         super(props);
 
         autorun(() => {
             this.candidates = toJS(_.difference(this.props.candidates, this.props.ballot.votes))
         })
+    }
+
+    setFilter = (e) => {
+        this.filter = e.target.value;
+    }
+
+    filteredCandidates = () => {
+        return this.candidates.filter((candidate) => {
+           return includes(candidate.title, this.filter) ||
+           includes(candidate.subtitle, this.filter) ||
+           includes(candidate.description, this.filter);
+        });
     }
 
     emptyMessage = () => {
@@ -71,6 +90,9 @@ export default class CandidateList extends Component {
                 <div className="card-content flex-none">
                     <div>
                         <h1 className="title has-text-centered">Candidates</h1>
+                        <div className="control">
+                            <input type="text" className="input" placeholder="search..." onChange={this.setFilter} disabled={this.candidates.length == 0 }/>
+                        </div>
                     </div>
                 </div>
                 <div className="flex flex-auto">
@@ -79,7 +101,7 @@ export default class CandidateList extends Component {
                     <div style={{position: 'relative'}}>
                     {this.emptyMessage()}
                     <AnimatedList>
-                        {this.candidates.map((candidate, i) => (
+                        {this.filteredCandidates().map((candidate, i) => (
                             <DraggableCandidateCard key={candidate.id} className="card z-1 is-fullwidth" candidate={candidate} details draggable/>
                         ))}
                     </AnimatedList>
