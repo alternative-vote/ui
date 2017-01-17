@@ -34,6 +34,8 @@ const candidates = [
     votr, netmon, wcui, long
 ]
 
+//states: edit, running, complete
+
 class ElectionService {
 
     create() {

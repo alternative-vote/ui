@@ -4,6 +4,7 @@
   "description": "Boilerplate for MobX + React project with JSX, ES6 compilation and hot code reloading",
   "scripts": {
     "start": "node server.js",
+    "build": "webpack",
     "lint": "eslint src"
   },
   "repository": {
@@ -41,6 +42,7 @@
     "bulma": "^0.2.3",
     "css-loader": "^0.26.1",
     "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.9.0",
     "halogen": "^0.2.0",
     "mobx": "^2.7.0",
     "mobx-react": "^4.0.4",

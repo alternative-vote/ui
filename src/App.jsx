@@ -20,15 +20,19 @@ class App extends Component {
     }
   }
 
+  //Disabled routes:
+  /*
+  <Route path="/login" component={LoginPage}/>
+  <Route path="/" component={Layout} onEnter={this.checkAuth}>
+    <IndexRoute  component={HomePage}/>
+    <Route path="/elections/:electionId/admin" component={ElectionAdminPage}/>
+  </Route>
+  */
+
   render() {
     return (
       <div className="full-height">
         <Router history={browserHistory}>
-          <Route path="/login" component={LoginPage}/>
-          <Route path="/" component={Layout} onEnter={this.checkAuth}>
-            <IndexRoute  component={HomePage}/>
-            <Route path="/elections/:electionId/admin" component={ElectionAdminPage}/>
-          </Route>
           <Route path="/vote/:hash" component={VotePage}/>
           <Route path="*" component={NotFoundPage}/>
         </Router>

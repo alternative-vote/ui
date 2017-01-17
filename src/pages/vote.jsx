@@ -6,7 +6,7 @@ import auth from '../services/auth'
 import election from '../services/election'
 
 import {Link} from 'react-router';
-import {Motion, spring} from 'react-motion';
+import {Motion, spring, presets} from 'react-motion';
 import Halogen from 'halogen';
 
 import Ballot from '../components/ballot'
@@ -30,6 +30,7 @@ class VotePage extends Component {
     ballot : null,
     isLoading : true,
     isConfirming : false,
+    is404 : false,
   }
 
   constructor(props) {
@@ -39,8 +40,15 @@ class VotePage extends Component {
     const userId = 'asdf'
 
     election.getFromHash(hash).then(({election, ballot})=>{
+      //TODO: will 404 be here?
       this.state.election = election
       this.state.ballot = ballot
+
+      if(election.state == 'edit') {
+        this.state.is404=true;
+      }
+    }).catch(() => {
+      this.state.is404 = true;
     }).finally(() => {
       this.state.isLoading = false
     }).done()
@@ -62,50 +70,134 @@ class VotePage extends Component {
   }
 
   isBallotDisabled = () => {
-    return this.state.isConfirming || this.state.ballot.isSubmitted
+    return this.state.isConfirming || this.state.ballot.isSubmitted || this.state.election.state != 'running'
   }
 
-  ballot = () => {
+  getStatus = () => {
+    const {state} = this.state.election
+    
+    //states: edit, running, complete
+
+    if(state == 'edit') {
+      
+    }
+    if(state == 'running') {
+      return 'Active';
+    }
+    return 'Closed';
+  }
+
+  content = () => {
     if(this.state.isLoading) {
       return (
-        <div className="has-text-centered">
+        <div className="has-text-centered" style={{margin : 'auto'}}>
         <Halogen.PulseLoader color={"gray"}/>
+        </div>
+      )
+    }
+
+    if(this.state.is404) {
+      return (
+        <div className="has-text-centered" style={{margin : 'auto'}}>
+          <h1 className="title is-1">
+            404
+          </h1>
+          <h2 className="subtitle is-3">
+            There's nothing to vote on here.
+          </h2>
         </div>
       )
     }
 
     return (
       <div className="container flex flex-col flex-auto">
-        <div className="has-text-centered flex-none">
-          <h1 className="title is-1">
+        <div className="flex-none">
+        <div className="level">
+        <div className="level-item">
+        <div>
+        <h1 className="title is-1">
             {this.state.election.title}
-          </h1>
-          <h2 className="subtitle is-3">
-            {this.state.election.subtitle}
-          </h2>
+        </h1>
+        <h2 className="subtitle is-3">
+          {this.state.election.subtitle}
+        </h2>
+        </div>
+        </div>
+        <div className="level-right">
+          <div className="level-item">
+            <p className="heading">{this.getStatus()}</p>
+            {this.ballotIcon()}
+            </div>
+          </div>
+        </div>
         </div>
         <hr className="flex-none"/>
-        <div className="flex flex-auto">
+        <div className="flex flex-auto flex-col">
           <Ballot ballot={this.state.ballot} candidates={this.state.election.candidates} disabled={this.isBallotDisabled()}/>
+        </div>
+        <div className="container">
+          <div className="flex-none">
+            {this.footerButtons()}
+        </div>
         </div>
       </div>
     )
   }
 
+  ballotIcon = () => {
+    const {isSubmitted} = this.state.ballot;
+
+    const springs = {
+      scale : spring(isSubmitted ? 1.05 : 0.7, presets.wobbly),
+      green : spring(isSubmitted ? 128 : 100),
+    }
+
+    return (
+      <Motion style={springs}>
+      {interpolatedStyle => {
+        const {scale, green} = interpolatedStyle
+
+        const ballotStyle = {
+          opacity : isSubmitted ? 0 : 1,
+          color : 'OrangeRed',
+        }
+
+        const receivedStyle = {
+          position : 'absolute',
+          top : 0,
+          left : 0,
+          opacity : isSubmitted ? 1 : 0,
+          marginRight: Math.round(green),
+          color : `rgb(0,${Math.round(green)},0)`,
+          transform: `scale(${scale})`,
+        }
+
+        return (
+          <div style={{position: 'relative'}}>
+            <div className="icon is-large" style={ballotStyle}>
+              <i className="icon-ballot" ></i>
+            </div>
+            <div className="icon is-large" style={receivedStyle}>
+              <i className="icon-ballot-received"></i>
+            </div>
+          </div>
+        )
+      }}
+      </Motion>
+    )
+  }
+
   flipButtons = () => {
-    if((this.state.ballot || {}).isSubmitted) {
-      console.log('spring to 2')
+    if((this.state.ballot || {}).isSubmitted || this.state.election.state == 'completed') {
       return {
         rotation: spring(2),
       }
     }
     if(this.state.isConfirming) {
-      console.log('spring to 1')
       return {
         rotation: spring(1),
       }
     }
-    console.log('spring to 0')
     return {
       rotation: spring(0),
     }
@@ -149,23 +241,15 @@ class VotePage extends Component {
           dom = (
             <div className="nav-right">
               <div className="nav-item">
-                <button className="button" style={style}>Placeholder for sizing</button>
+                <button className="button" style={style} disabled>Placeholder for sizing</button>
               </div>
             </div>
           )
         }
 
         return (
-          <div className="level">
-            <div className="level-item">
-            <div className="notification">
-            </div>
-            </div>
-            <div className="level-right">
-              <div className="level-item">
-                {dom}
-              </div>
-            </div>
+          <div className="nav" style={{margin: '10px 0px'}}>
+            {dom}
           </div>
         );
       }}
@@ -190,14 +274,8 @@ class VotePage extends Component {
           </div>
         </header>
         <section className="section flex flex-col flex-auto scroll main-content">
-          {this.ballot()}
-          <div className="container">
-          <div className="card-content flex-none">
-            {this.footerButtons()}
-          </div>
-          </div>
+          {this.content()}
         </section>
-        
       </div>
     );
   }
