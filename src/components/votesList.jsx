@@ -14,13 +14,13 @@ import AnimatedList from './animatedList'
 const target = {
     @action
     hover(props, monitor) {
-        const id = monitor.getItem().candidateId
+        const title = monitor.getItem().candidateId
         const votes = props.ballot.votes
         const candidates = props.candidates
-        const index = _.findIndex(votes, { id })
+        const index = _.findIndex(votes, { title })
 
         if (index < 0) {
-            const candidate = _.find(candidates, { id })
+            const candidate = _.find(candidates, { title })
             votes.push(candidate)
             monitor.getItem().index = votes.length
         }
@@ -52,9 +52,9 @@ export default class VotesList extends Component {
     reorder = (draggingId, targetId) => {
         const votes = this.props.ballot.votes
         const candidates = this.props.candidates
-        const currentIndex = _.findIndex(votes, { id : draggingId })
-        const targetIndex = _.findIndex(votes, { id : targetId })
-        const candidate = _.find(candidates, { id : draggingId })
+        const currentIndex = _.findIndex(votes, { title : draggingId })
+        const targetIndex = _.findIndex(votes, { title : targetId })
+        const candidate = _.find(candidates, { title : draggingId })
         
         if(currentIndex >= 0) {
             votes.splice(currentIndex, 1)
@@ -97,27 +97,12 @@ export default class VotesList extends Component {
         )
     }
 
-    // renderPlaceholder(i, key, content) {
-    //     return (
-    //         <div className="level columns" key={key}>
-    //             <div className="level-left column is-1">
-    //                 <div className="level-item">
-    //                     <h1 className="title">{i+1}</h1>
-    //                 </div>
-    //             </div>
-    //             <div className="level-item column">
-    //                 {content}
-    //             </div>
-    //         </div>
-    //     )
-    // }
-
     getItems() {
         const items = []
 
         this.props.ballot.votes.forEach((candidate, i) => {
             items.push(
-                <DraggableCandidateCard key={candidate.id} className={"is-fullwidth" + (this.props.disabled ? "" : " card z-1")}
+                <DraggableCandidateCard key={candidate.title} className={"is-fullwidth" + (this.props.disabled ? "" : " card z-1")}
                     style={{transition : 'all 250ms ease-out'}}
                     candidate={candidate} 
                     onHover={this.reorder} 
@@ -126,25 +111,12 @@ export default class VotesList extends Component {
             );
         });
 
-        //If ballot is disabled and empty
-        // if(this.props.disabled && this.props.ballot.votes.length == 0) {
-        //     items.push(
-        //         <div key="_emptyMessage" className="has-text-centered">
-        //             <small>This ballot is empty.</small>
-        //         </div>
-        //     )
-        // }
-
         //If ballot is enabled and full
         if(!this.props.disabled && this.props.ballot.votes.length != this.props.candidates.length) {
             items.push(
                 <div key="_placeholder" className="placeholder"></div>
             )
         }
-
-        // if(items.length == 0) {
-        //     return null;
-        // }
 
         return items;
     }

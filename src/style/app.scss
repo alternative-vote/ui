@@ -50,6 +50,10 @@ body {
 
 .draggable-card {
   transition: all 300ms;
+
+}
+
+body {
   user-select: none;
   -moz-user-select: -moz-none;
   -webkit-user-select: none;

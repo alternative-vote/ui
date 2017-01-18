@@ -6,7 +6,7 @@ import {toJS} from 'mobx';
 const cardSource = {
     beginDrag(props) {
         return {
-            candidateId : props.candidate.id,
+            candidateId : props.candidate.title,
         }
     }
 }
@@ -21,7 +21,7 @@ function sourceCollector(connect, monitor) {
 const cardTarget = {
     hover(props, monitor, component) {
         const draggingId = monitor.getItem().candidateId;
-        const targetId = props.candidate.id
+        const targetId = props.candidate.title
 
         if (draggingId === targetId) {
             return;
@@ -84,7 +84,7 @@ export class DraggableCandidateCard extends Component {
 
     render() {
         const { draggingId, draggable, droppable, connectDropTarget,  connectDragSource} = this.props;
-        const isDragging = draggable && draggingId == this.props.candidate.id
+        const isDragging = draggable && draggingId == this.props.candidate.title
         
         let ui = (
             <div className={(draggable ? "draggable-card" : "") + (isDragging ? " dragging" : "")}>

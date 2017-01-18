@@ -90,7 +90,7 @@ export default class CardDragLayer extends Component{
             return null;
         }
 
-        const candidate = _.find(this.props.candidates, {id : item.candidateId})
+        const candidate = _.find(this.props.candidates, {title : item.candidateId})
 
         return (
             <div style={layerStyles}>

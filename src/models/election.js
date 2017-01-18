@@ -11,7 +11,6 @@ export class Role {
 }
 
 export class Candidate {
-    @observable id = '';
     @observable title = '';
     @observable subtitle = '';
     @observable description = '';

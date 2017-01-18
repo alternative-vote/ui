@@ -14,7 +14,7 @@ const target = {
         const id = monitor.getItem().candidateId
         const votes = props.ballot.votes
         const candidates = props.candidates
-        const index = _.findIndex(votes, {id : monitor.getItem().candidateId})
+        const index = _.findIndex(votes, {title : monitor.getItem().candidateId})
 
         if (index >= 0) {
             votes.splice(index, 1)
@@ -51,7 +51,9 @@ export default class CandidateList extends Component {
         super(props);
 
         autorun(() => {
-            this.candidates = toJS(_.difference(this.props.candidates, this.props.ballot.votes))
+            this.candidates = toJS(_.differenceBy(this.props.candidates, this.props.ballot.votes, (c) => {
+                return c.title;
+            }))
         })
     }
 
@@ -102,7 +104,7 @@ export default class CandidateList extends Component {
                     {this.emptyMessage()}
                     <AnimatedList>
                         {this.filteredCandidates().map((candidate, i) => (
-                            <DraggableCandidateCard key={candidate.id} className="card z-1 is-fullwidth" candidate={candidate} details draggable/>
+                            <DraggableCandidateCard key={candidate.title} className="card z-1 is-fullwidth" candidate={candidate} details draggable/>
                         ))}
                     </AnimatedList>
                     </div>

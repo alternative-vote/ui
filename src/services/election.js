@@ -78,11 +78,53 @@ class ElectionService {
     }
 
     getFromHash(hash) {
-        return q.all([
-           this.getById(),
-           this.getBallot(),
-        ]).spread((election, ballot) => {
-            return { election, ballot }
+        return q(fetch(`/api/vote/${hash}`)).then((res) => {
+            if(!res.ok) {
+                throw('Failed to get election')
+            }
+            return res.json();
+        }).then(({election, ballot}) => {
+            const ballotModel = new Ballot();
+            ballotModel.voter = ballot.voter;
+            ballotModel.isSubmitted = ballot.isSubmitted;
+            ballotModel.votes = ballot.votes || [];
+
+            const electionModel = new Election();
+            electionModel.id = election.id;
+            electionModel.title = election.title;
+            electionModel.subtitle = election.subtitle;
+            electionModel.description = election.description;
+            electionModel.state = election.state;
+            electionModel.results = election.results;
+
+            electionModel.candidates = election.candidates.map((candidate) => {
+                const candidateModel = new Candidate();
+                candidateModel.title = candidate.title;
+                candidateModel.subtitle = candidate.subtitle;
+                candidateModel.description = candidate.description;
+                return candidateModel;
+            });
+
+            return {
+                election : electionModel,
+                ballot : ballotModel,
+            }
+        });
+    }
+
+    saveBallot(hash, ballot) {
+        return q(fetch(`/api/vote/${hash}`, {
+            method : 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body : JSON.stringify(ballot)
+        })).then((res) => {
+            if(!res.ok) {
+                throw('Error saving ballot');
+            }
+            return
         });
     }
 

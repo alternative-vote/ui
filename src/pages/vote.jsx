@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, action } from "mobx";
+import { observable, action, autorun } from "mobx";
 import { observer } from "mobx-react";
 import q from 'q'
 import auth from '../services/auth'
@@ -13,18 +13,6 @@ import Ballot from '../components/ballot'
 
 @observer
 class VotePage extends Component {
-  static fromHash(nextState, replace, callback) {
-    const hash = nextState.params.hash
-
-    auth.fromHash(hash).then(()=> {
-      replace("/elections/7/vote")
-      callback()
-    }).catch(() => {
-      replace("/elections/7/vote")
-      callback()
-    })
-  }
-
   @observable state = {
     election : null,
     ballot : null,
@@ -39,10 +27,21 @@ class VotePage extends Component {
     const hash = this.props.params.hash
     const userId = 'asdf'
 
+    const debouncedSave = _.debounce(this.saveBallot, 1000);
+
     election.getFromHash(hash).then(({election, ballot})=>{
-      //TODO: will 404 be here?
       this.state.election = election
       this.state.ballot = ballot
+
+      let first = true;
+      autorun(() => {
+        JSON.stringify(this.state.ballot.votes)
+        if(first) {
+          first = false;
+        } else {
+          debouncedSave();
+        }
+      });
 
       if(election.state == 'edit') {
         this.state.is404=true;
@@ -52,6 +51,7 @@ class VotePage extends Component {
     }).finally(() => {
       this.state.isLoading = false
     }).done()
+
   }
 
   @action
@@ -67,6 +67,17 @@ class VotePage extends Component {
   @action
   submit = () => {
     this.state.ballot.isSubmitted = true
+    this.saveBallot();
+  }
+
+  @action
+  unSubmit = () => {
+    this.state.ballot.isSubmitted = false
+    this.saveBallot();
+  }
+
+  saveBallot = () => {
+    election.saveBallot(this.props.params.hash, this.state.ballot).done();
   }
 
   isBallotDisabled = () => {
@@ -241,7 +252,7 @@ class VotePage extends Component {
           dom = (
             <div className="nav-right">
               <div className="nav-item">
-                <button className="button" style={style} disabled>Placeholder for sizing</button>
+                <button className="button" onClick={this.unSubmit}>Unsubmit</button>
               </div>
             </div>
           )
