@@ -1,0 +1,1 @@
+cp -R {index.html,static} $GOPATH/src/github.com/alternative-vote/server/client

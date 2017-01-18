@@ -9,7 +9,6 @@ import {DraggableCandidateCard} from './candidateCard'
 import AnimatedList from './animatedList'
 
 const target = {
-    @action
     hover(props, monitor) {
         const id = monitor.getItem().candidateId
         const votes = props.ballot.votes
@@ -41,8 +40,8 @@ export default class CandidateList extends Component {
         candidates : React.PropTypes.any.isRequired,
     }
 
-    @observable
-    candidates = []
+    // @observable
+    // candidates = []
 
     @observable
     filter = '';
@@ -50,11 +49,22 @@ export default class CandidateList extends Component {
     constructor(props) {
         super(props);
 
-        autorun(() => {
-            this.candidates = toJS(_.differenceBy(this.props.candidates, this.props.ballot.votes, (c) => {
-                return c.title;
-            }))
-        })
+        // autorun(() => {
+        //     this.candidates = toJS(_.differenceBy(this.props.candidates, this.props.ballot.votes, (c) => {
+        //         return c.title;
+        //     }));
+            
+        //     // if(!_.isEqual(this.candidates, candidates)) {
+        //     //     console.log('new assignmnet')
+        //     //     this.candidates = candidates
+        //     // }
+        // })
+    }
+
+    unusedCandidates = () => {
+        return this.props.candidates.filter((candidate) => {
+            return _.findIndex(this.props.ballot.votes, {title : candidate.title}) == -1;
+        });
     }
 
     setFilter = (e) => {
@@ -62,7 +72,7 @@ export default class CandidateList extends Component {
     }
 
     filteredCandidates = () => {
-        return this.candidates.filter((candidate) => {
+        return this.unusedCandidates().filter((candidate) => {
            return includes(candidate.title, this.filter) ||
            includes(candidate.subtitle, this.filter) ||
            includes(candidate.description, this.filter);
@@ -70,7 +80,7 @@ export default class CandidateList extends Component {
     }
 
     emptyMessage = () => {
-        if (this.candidates.length > 0) {
+        if (this.unusedCandidates().length > 0) {
             return ''
         }
 
@@ -80,8 +90,6 @@ export default class CandidateList extends Component {
             </div>
         )
     }
-
-    noop = () => {}
 
     render() {
         const { connectDropTarget, isOver } = this.props;
@@ -93,7 +101,7 @@ export default class CandidateList extends Component {
                     <div>
                         <h1 className="title has-text-centered">Candidates</h1>
                         <div className="control">
-                            <input type="text" className="input" placeholder="search..." onChange={this.setFilter} disabled={this.candidates.length == 0 }/>
+                            <input type="text" className="input" placeholder="search..." onChange={this.setFilter} disabled={this.unusedCandidates().length == 0 }/>
                         </div>
                     </div>
                 </div>
@@ -102,9 +110,9 @@ export default class CandidateList extends Component {
                 <div className="card-content flex-auto scroll">
                     <div style={{position: 'relative'}}>
                     {this.emptyMessage()}
-                    <AnimatedList>
+                    <AnimatedList fixedHeight={71}>
                         {this.filteredCandidates().map((candidate, i) => (
-                            <DraggableCandidateCard key={candidate.title} className="card z-1 is-fullwidth" candidate={candidate} details draggable/>
+                            <DraggableCandidateCard key={candidate.title} className="card z-1 is-fullwidth" candidate={candidate} draggable/>
                         ))}
                     </AnimatedList>
                     </div>

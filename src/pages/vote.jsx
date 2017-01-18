@@ -13,13 +13,16 @@ import Ballot from '../components/ballot'
 
 @observer
 class VotePage extends Component {
-  @observable state = {
+  @observable data = {
     election : null,
     ballot : null,
     isLoading : true,
     isConfirming : false,
     is404 : false,
   }
+
+  @observable
+  is404 = true;
 
   constructor(props) {
     super(props)
@@ -30,12 +33,12 @@ class VotePage extends Component {
     const debouncedSave = _.debounce(this.saveBallot, 1000);
 
     election.getFromHash(hash).then(({election, ballot})=>{
-      this.state.election = election
-      this.state.ballot = ballot
+      this.data.election = election
+      this.data.ballot = ballot
 
       let first = true;
       autorun(() => {
-        JSON.stringify(this.state.ballot.votes)
+        JSON.stringify(this.data.ballot.votes)
         if(first) {
           first = false;
         } else {
@@ -43,63 +46,59 @@ class VotePage extends Component {
         }
       });
 
-      if(election.state == 'edit') {
-        this.state.is404=true;
+      if(election.data == 'edit') {
+        this.data.is404=true;
       }
     }).catch(() => {
-      this.state.is404 = true;
+      this.data.is404 = true;
     }).finally(() => {
-      this.state.isLoading = false
+      this.data.isLoading = false
     }).done()
 
   }
 
-  @action
   startConfirmation = () => {
-    this.state.isConfirming = true
+    this.data.isConfirming = true
   }
 
-  @action
   cancelConfirmation = () => {
-    this.state.isConfirming = false
+    this.data.isConfirming = false
   }
   
-  @action
   submit = () => {
-    this.state.ballot.isSubmitted = true
+    this.data.ballot.isSubmitted = true
     this.saveBallot();
   }
 
-  @action
   unSubmit = () => {
-    this.state.ballot.isSubmitted = false
+    this.data.ballot.isSubmitted = false
     this.saveBallot();
   }
 
   saveBallot = () => {
-    election.saveBallot(this.props.params.hash, this.state.ballot).done();
+    election.saveBallot(this.props.params.hash, this.data.ballot).done();
   }
 
   isBallotDisabled = () => {
-    return this.state.isConfirming || this.state.ballot.isSubmitted || this.state.election.state != 'running'
+    return this.data.isConfirming || this.data.ballot.isSubmitted || this.data.election.state != 'running'
   }
 
   getStatus = () => {
-    const {state} = this.state.election
+    const {data} = this.data.election
     
-    //states: edit, running, complete
+    //datas: edit, running, complete
 
-    if(state == 'edit') {
+    if(data == 'edit') {
       
     }
-    if(state == 'running') {
+    if(data == 'running') {
       return 'Active';
     }
     return 'Closed';
   }
 
   content = () => {
-    if(this.state.isLoading) {
+    if(this.data.isLoading) {
       return (
         <div className="has-text-centered" style={{margin : 'auto'}}>
         <Halogen.PulseLoader color={"gray"}/>
@@ -107,7 +106,7 @@ class VotePage extends Component {
       )
     }
 
-    if(this.state.is404) {
+    if(this.data.is404) {
       return (
         <div className="has-text-centered" style={{margin : 'auto'}}>
           <h1 className="title is-1">
@@ -127,10 +126,10 @@ class VotePage extends Component {
         <div className="level-item">
         <div>
         <h1 className="title is-1">
-            {this.state.election.title}
+            {this.data.election.title}
         </h1>
         <h2 className="subtitle is-3">
-          {this.state.election.subtitle}
+          {this.data.election.subtitle}
         </h2>
         </div>
         </div>
@@ -144,7 +143,7 @@ class VotePage extends Component {
         </div>
         <hr className="flex-none"/>
         <div className="flex flex-auto flex-col">
-          <Ballot ballot={this.state.ballot} candidates={this.state.election.candidates} disabled={this.isBallotDisabled()}/>
+          <Ballot ballot={this.data.ballot} candidates={this.data.election.candidates} disabled={this.isBallotDisabled()}/>
         </div>
         <div className="container">
           <div className="flex-none">
@@ -156,7 +155,7 @@ class VotePage extends Component {
   }
 
   ballotIcon = () => {
-    const {isSubmitted} = this.state.ballot;
+    const {isSubmitted} = this.data.ballot;
 
     const springs = {
       scale : spring(isSubmitted ? 1.05 : 0.7, presets.wobbly),
@@ -199,12 +198,12 @@ class VotePage extends Component {
   }
 
   flipButtons = () => {
-    if((this.state.ballot || {}).isSubmitted || this.state.election.state == 'completed') {
+    if((this.data.ballot || {}).isSubmitted || this.data.election.state == 'completed') {
       return {
         rotation: spring(2),
       }
     }
-    if(this.state.isConfirming) {
+    if(this.data.isConfirming) {
       return {
         rotation: spring(1),
       }

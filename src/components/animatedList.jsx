@@ -43,6 +43,8 @@ export default class AnimatedList extends Component {
         React.Children.forEach(this.props.children, (child, i) => {
             const {key} = child;
             const currentPosition = this.positions[key] || {}
+
+            const height = currentPosition.height || elements[i].offsetHeight;
             
             const y = elements.slice(0, i).reduce((sum, el) => {
                 return sum + el.offsetHeight + PADDING

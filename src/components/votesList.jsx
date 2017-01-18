@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable, toJS } from "mobx";
+import { action } from "mobx";
 import { observer } from "mobx-react";
 import { DragDropContext, DragSource, DropTarget } from 'react-dnd';
 import {Motion, spring} from 'react-motion';
@@ -12,7 +12,6 @@ import AnimatedList from './animatedList'
 
 
 const target = {
-    @action
     hover(props, monitor) {
         const title = monitor.getItem().candidateId
         const votes = props.ballot.votes
@@ -121,9 +120,6 @@ export default class VotesList extends Component {
         return items;
     }
 
-    @observable
-    yPositions = []
-
     render() {
         const { connectDropTarget, isOver } = this.props;
         const items = this.getItems();
@@ -138,28 +134,28 @@ export default class VotesList extends Component {
                 <div className="flex flex-auto">
                     <div className="scroll-fade-top"></div>
                     <div className="card-content flex-auto scroll">
-                        <div className="columns">
-                            <div className="column is-8 is-offset-2" style={{position: 'relative'}}>
-                                {(this.props.disabled && items.length == 0) ? (
-                                        <div className="has-text-centered">
-                                            <small>This ballot is empty.</small>
+                        <div className="columns" style={{position: 'relative'}}>
+                            {(this.props.disabled && items.length == 0) ? (
+                                <div className="has-text-centered">
+                                    <small>This ballot is empty.</small>
+                                </div>
+                            ) : null}
+                            <div className="column is-1 is-offset-1">
+                                <div style={{position:'relative'}}>
+                                <AnimatedList fixedHeight={71} animateEnterLeave >
+                                    {items.map((vote, i) => 
+                                        <div key={i} className="flex has-text-centered" style={{height: '59px', alignItems: 'center'}}>
+                                            <h1  className="title" style={{margin : 'auto'}}>{i+1}</h1>
                                         </div>
-                                ) : null}
-                                <div className="columns">
-                                    <div className="column is-1">
-                                        <AnimatedList fixedHeight={95} animateEnterLeave >
-                                            {items.map((vote, i) => 
-                                                <div key={i} className="flex" style={{height: '75px', alignItems: 'center'}}>
-                                                    <h1  className="title">{i+1}</h1>
-                                                </div>
-                                            )}
-                                        </AnimatedList>
-                                    </div>
-                                    <div className="column">
-                                         <AnimatedList fixedHeight={95} >
-                                            {items}
-                                        </AnimatedList>
-                                    </div>
+                                    )}
+                                </AnimatedList>
+                                </div>
+                            </div>
+                            <div className="column is-9">
+                                <div style={{position:'relative'}}>
+                                <AnimatedList fixedHeight={71} >
+                                    {items}
+                                </AnimatedList>
                                 </div>
                             </div>
                         </div>

@@ -35,7 +35,7 @@ body {
 }
 
 .placeholder {
-  height : 75px;
+  height : 59px;
   border-bottom: 1px solid rgba(0,0,0,0.64)
 }
 
@@ -80,6 +80,10 @@ body {
   * {
     opacity: 0;
   }
+}
+
+.candidate-card {
+  padding: 12px;
 }
 
 .dragging-card {

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 import { DragSource, DropTarget } from 'react-dnd';
-import {toJS} from 'mobx';
+import { toJS } from 'mobx';
+import { observer } from 'mobx-react';
 
 const cardSource = {
     beginDrag(props) {
@@ -37,6 +38,7 @@ function targetCollector(connect, monitor) {
     }
 }
 
+@observer
 export class CandidateCard extends Component {
     static propTypes = {
         details : React.PropTypes.bool,
@@ -59,7 +61,7 @@ export class CandidateCard extends Component {
 
         return (
             <div className={this.props.className} style={this.props.style}>
-            <div className="card-content">
+            <div className="candidate-card">
                 <strong style={style}>{this.props.candidate.title}</strong>
                 <small style={style}>{this.props.candidate.subtitle}</small>
                 {this.props.details ? this.props.candidate.description : ''}
@@ -73,6 +75,7 @@ export class CandidateCard extends Component {
 
 @DragSource('candidate', cardSource, sourceCollector)
 @DropTarget('candidate', cardTarget, targetCollector)
+@observer
 export class DraggableCandidateCard extends Component {
     static propTypes = {
         draggable : React.PropTypes.bool,
@@ -81,6 +84,11 @@ export class DraggableCandidateCard extends Component {
         details : React.PropTypes.bool,
         candidate : React.PropTypes.any.isRequired,
     }
+
+    // componentWillReact() {
+    //     console.log(this.props.candidate.title, 'will react')
+    //     console.log(this.props.candidate);
+    // }
 
     render() {
         const { draggingId, draggable, droppable, connectDropTarget,  connectDragSource} = this.props;
