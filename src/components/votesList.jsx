@@ -32,7 +32,7 @@ function collector(connect, monitor) {
     };
 }
 
-// @DropTarget('candidate', target, collector)
+@DropTarget('candidate', target, collector)
 @observer
 export default class VotesList extends Component {
     static propTypes = {
@@ -162,7 +162,7 @@ export default class VotesList extends Component {
         if (this.props.disabled) {
             return ui
         }
-
-        // return connectDropTarget(ui)
+ 
+        return connectDropTarget(ui)
     }
 }

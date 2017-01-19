@@ -47,7 +47,7 @@ export default class Help extends Component {
                         <p>
                         The easiest way to explain how instant runoff voting works is to watch this excellent video from CGPGrey:
                         </p>
-                        <iframe width="100%" height="540px" src="https://www.youtube.com/embed/3Y3jE3B8HsE" frameborder="0" allowfullscreen></iframe>
+                        <iframe width="100%" height="540px" src="https://www.youtube.com/embed/3Y3jE3B8HsE"></iframe>
                         <p>&nbsp;</p>
                         <h6><strong>Why should I care?</strong></h6>
                         <p>
