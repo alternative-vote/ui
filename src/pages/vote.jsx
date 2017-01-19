@@ -10,6 +10,8 @@ import {Motion, spring, presets} from 'react-motion';
 import Halogen from 'halogen';
 
 import Ballot from '../components/ballot'
+import Results from '../components/results'
+import Help from '../components/help'
 
 @observer
 class VotePage extends Component {
@@ -19,6 +21,7 @@ class VotePage extends Component {
     isLoading : true,
     isConfirming : false,
     is404 : false,
+    help : false,
   }
 
   @observable
@@ -70,6 +73,18 @@ class VotePage extends Component {
     this.saveBallot();
   }
 
+  showHelp = () => {
+    this.data.help = true;
+  }
+
+  closeHelp = () => {
+    this.data.help = false;
+  }
+
+  hideHelp = () => {
+    this.data.help = false;
+  }
+
   unSubmit = () => {
     this.data.ballot.isSubmitted = false
     this.saveBallot();
@@ -84,14 +99,12 @@ class VotePage extends Component {
   }
 
   getStatus = () => {
-    const {data} = this.data.election
+    const {state} = this.data.election
     
-    //datas: edit, running, complete
-
-    if(data == 'edit') {
-      
+    if(state == 'edit') {
+      return 'Inactive'
     }
-    if(data == 'running') {
+    if(state == 'running') {
       return 'Active';
     }
     return 'Closed';
@@ -119,6 +132,11 @@ class VotePage extends Component {
       )
     }
 
+    let body = <Ballot ballot={this.data.ballot} candidates={this.data.election.candidates} disabled={this.isBallotDisabled()}/>
+    if(this.data.election.state == 'complete') {
+        body = <Results candidates={this.data.election.results.orderedCandidates}/>
+    }
+
     return (
       <div className="container flex flex-col flex-auto">
         <div className="flex-none">
@@ -142,8 +160,8 @@ class VotePage extends Component {
         </div>
         </div>
         <hr className="flex-none"/>
-        <div className="flex flex-auto flex-col">
-          <Ballot ballot={this.data.ballot} candidates={this.data.election.candidates} disabled={this.isBallotDisabled()}/>
+        <div className="flex flex-auto flex-col" style={{minHeight: '300px'}}>
+          {body}
         </div>
         <div className="container">
           <div className="flex-none">
@@ -152,6 +170,26 @@ class VotePage extends Component {
         </div>
       </div>
     )
+  }
+
+  getTooltipText = () => {
+    let header = '';
+    let body = '';
+
+    if (this.data.ballot.isSubmitted) {
+      header = 'You voted!';
+      body = 'Your vote was succesfully submitted. Just sit back and wait for the results!';
+    } else {
+      if (this.data.election.state == 'running') {
+        header = 'You have not voted.'
+        body = 'Your vote will not count until it is submitted and confirmed.'
+      } else {
+        header = 'You did not vote.'
+        body = 'You missed your opportunity. Sorry!'
+      }
+    }
+
+    return {header, body}
   }
 
   ballotIcon = () => {
@@ -182,14 +220,26 @@ class VotePage extends Component {
           transform: `scale(${scale})`,
         }
 
+        const {header, body} = this.getTooltipText();
+
         return (
-          <div style={{position: 'relative'}}>
+          <div style={{position: 'relative'}} className="tooltip-wrapper">
             <div className="icon is-large" style={ballotStyle}>
               <i className="icon-ballot" ></i>
             </div>
             <div className="icon is-large" style={receivedStyle}>
               <i className="icon-ballot-received"></i>
             </div>
+            <div className="tooltip z-3">
+                <div className="message">
+                  <div className="message-header">
+                    {header}
+                  </div>
+                  <div className="message-body">
+                    {body}
+                  </div>
+                </div>
+              </div>
           </div>
         )
       }}
@@ -198,7 +248,7 @@ class VotePage extends Component {
   }
 
   flipButtons = () => {
-    if((this.data.ballot || {}).isSubmitted || this.data.election.state == 'completed') {
+    if((this.data.ballot || {}).isSubmitted || this.data.election.state == 'complete') {
       return {
         rotation: spring(2),
       }
@@ -251,7 +301,7 @@ class VotePage extends Component {
           dom = (
             <div className="nav-right">
               <div className="nav-item">
-                <button className="button" onClick={this.unSubmit}>Unsubmit</button>
+                <button className="button" style={{opacity : 0}} disabled>Unsubmit</button>
               </div>
             </div>
           )
@@ -259,6 +309,13 @@ class VotePage extends Component {
 
         return (
           <div className="nav" style={{margin: '10px 0px'}}>
+            <div className="nev-left">
+              <div className="nav-item">
+                <a onClick={this.showHelp}>
+                  help!
+                </a>
+              </div>
+            </div>
             {dom}
           </div>
         );
@@ -270,14 +327,15 @@ class VotePage extends Component {
   render() {
     return (
       <div className="full-height flex flex-col">   
+        <Help disabled={!this.data.help} onClose={this.closeHelp}></Help>
         <header className="hero is-primary flex-none">
           <div className="hero-head">
             <div className="container">
             <nav className="nav">
               <div className="nav-left">
-                <Link className="nav-item" to="/">
-                  <h1 className="title">electioneer.io</h1>
-                </Link> 
+                <div className="nav-item">
+                  <h1 className="title">electioneer</h1>
+                </div>
               </div>
             </nav>
             </div>

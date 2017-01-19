@@ -34,7 +34,7 @@ function includes(str, substring) {
 
 @DropTarget('candidate', target, collector)
 @observer
-export default class CandidateList extends Component {
+export default class CandidatePool extends Component {
     static propTypes = {
         ballot : React.PropTypes.instanceOf(BallotModel).isRequired,
         candidates : React.PropTypes.any.isRequired,

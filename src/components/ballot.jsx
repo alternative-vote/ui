@@ -15,7 +15,7 @@ import TouchBackend from 'react-dnd-touch-backend';
 
 // import cardCard from './cardCard'
 import CandidateCard from './candidateCard'
-import CandidateList from './candidateList'
+import CandidatePool from './candidatePool'
 import VotesList from './votesList'
 import CardDragLayer from './dragLayer'
 
@@ -50,7 +50,6 @@ class Ballot extends Component {
 
     render() {
         return (
-            
             <div className="flex flex-col flex-auto">
                 <CardDragLayer candidates={this.props.candidates}></CardDragLayer>
                 <Motion style={this.getStyles()}>
@@ -75,7 +74,7 @@ class Ballot extends Component {
                     return (
                         <div className="columns flex-auto" style={{position : 'relative'}}>
                             <div className="column is-4 flex" style={leftStyle}>
-                                <CandidateList ballot={this.props.ballot} candidates={this.props.candidates} disabled={this.props.disabled}/>
+                                <CandidatePool ballot={this.props.ballot} candidates={this.props.candidates} disabled={this.props.disabled}/>
                             </div>
                             <div className="column is-8 flex" style={rightStyle}>
                                 <VotesList ballot={this.props.ballot} candidates={this.props.candidates} disabled={this.props.disabled}/>

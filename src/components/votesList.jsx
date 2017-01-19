@@ -10,7 +10,6 @@ import {Ballot as BallotModel} from '../models/ballot'
 import {DraggableCandidateCard} from './candidateCard'
 import AnimatedList from './animatedList'
 
-
 const target = {
     hover(props, monitor) {
         const title = monitor.getItem().candidateId
@@ -40,11 +39,6 @@ export default class VotesList extends Component {
         disabled : React.PropTypes.bool, 
         ballot : React.PropTypes.instanceOf(BallotModel).isRequired,
         candidates : React.PropTypes.any.isRequired,
-    }
-
-    getUnusedCandidates = () => {
-        //todo: random ordering
-        return _.difference(this.props.candidates, this.props.ballot.votes)
     }
 
     @action
@@ -134,12 +128,12 @@ export default class VotesList extends Component {
                 <div className="flex flex-auto">
                     <div className="scroll-fade-top"></div>
                     <div className="card-content flex-auto scroll">
+                        {(this.props.disabled && items.length == 0) ? (
+                            <div className="has-text-centered">
+                                <small>This ballot is empty.</small>
+                            </div>
+                        ) : null}
                         <div className="columns" style={{position: 'relative'}}>
-                            {(this.props.disabled && items.length == 0) ? (
-                                <div className="has-text-centered">
-                                    <small>This ballot is empty.</small>
-                                </div>
-                            ) : null}
                             <div className="column is-1 is-offset-1">
                                 <div style={{position:'relative'}}>
                                 <AnimatedList fixedHeight={71} animateEnterLeave >
