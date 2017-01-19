@@ -175,11 +175,17 @@ body {
   z-index: 100;
 }
 
-.icon {
-  text-shadow: 0 0 5px rgba(0,0,0,0.16);
+.icon.is-primary {
+  transition: all 0.3s;
+  color: $primary;
+  cursor: pointer;
 }
 
-.icon {
+.icon.is-primary:hover {
+  color: $primary-dark;
+}
+
+.icon.is-danger {
   color: $textDisabled;
 }
 

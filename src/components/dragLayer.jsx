@@ -54,7 +54,6 @@ export default class CardDragLayer extends Component{
         }
 
         if(!_.isEqual(size, toJS(this.size))) {
-            console.log(size)
             this.size = size;
         }
     }

@@ -41,7 +41,12 @@ export default class Help extends Component {
                         </p>
                         <h6><strong>How do I vote?</strong></h6>
                         <p>
-                        The list of all possible candidates is on the left, your ballot is on the right. Drag and drop candidates onto your ballot, ranking them in the order of your preference. You may include as many or as few candidates as you like on your ballot. Once you are finished, submit your ballot.
+                        <ul>
+                        <li>Drag candidates from the left onto your ballot.</li>
+                        <li>Rank candidates on your ballot in the order of your preference.</li>
+                        <li>You may include as many or as few candidates as you want. Generally, you should add any candidates for which you have some preference. To fully understand how ballots are counted, watch the video linked below.</li>
+                        <li>When you are satisfied, submit your ballot.</li>
+                        </ul>
                         </p>
                         <h6><strong>How are results calculated?</strong></h6>
                         <p>

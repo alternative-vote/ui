@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import { observable, action, autorun } from "mobx";
 import { observer } from "mobx-react";
 import q from 'q'
+
 import auth from '../services/auth'
 import election from '../services/election'
+
+import state from '../services/globalState'
 
 import {Link} from 'react-router';
 import {Motion, spring, presets} from 'react-motion';
@@ -14,6 +17,7 @@ import VotesList from '../components/votesList'
 import Results from '../components/results'
 import Help from '../components/help'
 
+
 @observer
 class VotePage extends Component {
   @observable data = {
@@ -22,7 +26,6 @@ class VotePage extends Component {
     isLoading : true,
     isConfirming : false,
     is404 : false,
-    help : false,
   }
 
   @observable
@@ -75,15 +78,11 @@ class VotePage extends Component {
   }
 
   showHelp = () => {
-    this.data.help = true;
+    state.showHelp = true;
   }
 
   closeHelp = () => {
-    this.data.help = false;
-  }
-
-  hideHelp = () => {
-    this.data.help = false;
+    state.showHelp = false;
   }
 
   unSubmit = () => {
@@ -192,7 +191,11 @@ class VotePage extends Component {
 
     if (this.data.ballot.isSubmitted) {
       header = 'You voted!';
-      body = 'Your vote was succesfully submitted. Just sit back and wait for the results!';
+      if (this.data.election.state == 'running') {
+        body = 'Your vote was succesfully submitted. You will receive an email with results when the election ends.';
+      } else {
+        body = 'Your vote was succesfully submitted. Check out the results.';
+      }
     } else {
       if (this.data.election.state == 'running') {
         header = 'You have not voted.'
@@ -268,6 +271,8 @@ class VotePage extends Component {
       return null;
     }
 
+    const disabled = this.data.ballot.votes.length == 0;
+
     return (
     <div className="flex-none">
     <div className="container">
@@ -285,7 +290,9 @@ class VotePage extends Component {
         let dom = (
           <div className="nav-right">
             <div className="nav-item">
-              <button className="button is-primary" onClick={this.startConfirmation} style={style}>Submit</button>
+              <button className="button is-primary" 
+                onClick={this.startConfirmation} 
+                style={style} disabled={disabled}>Submit</button>
             </div>
           </div>
         )
@@ -302,12 +309,11 @@ class VotePage extends Component {
           )
         }
         if(rotation > 1.5) {
-          style.opacity=0;
-          
           dom = (
             <div className="nav-right">
               <div className="nav-item">
-                <button className="button" style={{opacity : 0}} disabled>Unsubmit</button>
+                <button className="button" style={{opacity:0}} disabled>Unsubmit</button>
+                <span style={style}>You're done!</span>
               </div>
             </div>
           )
@@ -317,9 +323,6 @@ class VotePage extends Component {
           <div className="level" style={{margin: '10px 0px'}}>
             <div className="level-left">
               <div className="level-item">
-                <a onClick={this.showHelp}>
-                  help!
-                </a>
               </div>
             </div>
             {dom}
@@ -335,7 +338,7 @@ class VotePage extends Component {
   render() {
     return (
       <div className="full-height flex flex-col">   
-        <Help disabled={!this.data.help} onClose={this.closeHelp}></Help>
+        <Help disabled={!state.showHelp} onClose={this.closeHelp}></Help>
         <header className="hero is-primary flex-none">
           <div className="header-stripe"></div>
           <div className="hero-head">

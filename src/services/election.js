@@ -61,7 +61,7 @@ class ElectionService {
             election.title = "LogRhythm Hackathon"
             election.subtitle = "Q1 2017"
             election.description = "The best and brightest of logrhythm compete in a hackathon for cash money."
-            election.state = "complete"
+            election.state = "running"
 
             election.candidates = candidates;
 
@@ -83,7 +83,7 @@ class ElectionService {
     getBallot(electionId, userId) {
         return q.delay(delay).then(() => {
             const ballot = new Ballot()
-            ballot.votes = candidates;
+            ballot.votes = [];
             return ballot;
         })
     }

@@ -5,6 +5,8 @@ import { DragDropContext, DragSource, DropTarget } from 'react-dnd';
 import {Motion, spring} from 'react-motion';
 import _ from 'lodash';
 
+import state from '../services/globalState'
+
 import {Ballot as BallotModel} from '../models/ballot'
 
 import {DraggableCandidateCard} from './candidateCard'
@@ -39,6 +41,10 @@ export default class VotesList extends Component {
         disabled : React.PropTypes.bool, 
         ballot : React.PropTypes.instanceOf(BallotModel).isRequired,
         candidates : React.PropTypes.any.isRequired,
+    }
+
+    showHelp = () => {
+        state.showHelp = true   
     }
 
     @action
@@ -123,6 +129,15 @@ export default class VotesList extends Component {
                 <div className="card-content flex-none">
                     <div>
                         <h1 className="title has-text-centered">My Ballot</h1>
+                        <span className="icon is-primary" style={{
+                            position : 'absolute',
+                            top : 20,
+                            right : 20,
+                            opacity : this.props.disabled ? 0 : 1,
+                        }}>
+                        <i className="fa fa-question-circle" 
+                            onClick={this.showHelp}></i>
+                        </span>
                     </div>
                 </div>
                 <div className="flex flex-auto">
