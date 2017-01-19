@@ -31,7 +31,7 @@ body {
 }
 
 .main-content {
-  padding-bottom: 0;
+  padding: 20px 20px 0;
 }
 
 .card {
@@ -61,7 +61,7 @@ body {
   position: absolute;
   opacity: 0;
   width: 300px;
-  top: -37px;
+  top: -15px;
   right: 65px;
   pointer-events: none;
 }
@@ -72,13 +72,6 @@ body {
 
 .tooltip-wrapper:hover .tooltip {
   opacity: 1;
-}
-
-body {
-  user-select: none;
-  -moz-user-select: -moz-none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
 }
 
 .draggable-card:hover {
@@ -180,4 +173,21 @@ body {
   bottom: 0;
   background: rgba(0,0,0,0.4);
   z-index: 100;
+}
+
+.icon {
+  text-shadow: 0 0 5px rgba(0,0,0,0.16);
+}
+
+.icon {
+  color: $textDisabled;
+}
+
+.icon.is-success {
+  color: $success;
+}
+
+.header-stripe {
+  height : 12px;
+  background: $primary-dark;
 }

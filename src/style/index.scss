@@ -1,5 +1,11 @@
-$primary: #009688;
-$secondary: #FF5252;
+$primary-dark: #303F9F;
+$primary: #3F51B5;
+$secondary: #FFC107;
+
+$info: $primary;
+$success : #4CAF50;
+$warning: $secondary;
+$danger: #f44336;
 
 $body-background: radial-gradient(circle at center, #fcfcfc 0%,#f0f0f0 100%);
 // $white: rgba(255, 255, 255, 0);

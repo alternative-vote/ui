@@ -6,9 +6,14 @@ import { observer } from 'mobx-react';
 
 const cardSource = {
     beginDrag(props) {
+        document.body.style.userSelect = 'none';
         return {
             candidateId : props.candidate.title,
         }
+    },
+
+    endDrag() {
+        document.body.style.userSelect = 'initial';
     }
 }
 

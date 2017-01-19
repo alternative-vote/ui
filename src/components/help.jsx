@@ -11,17 +11,17 @@ export default class Help extends Component {
     }
     
     render () {
-        if (this.props.disabled) {
-            return null;
+        const style = {
+            display : this.props.disabled ? 'none' : 'block',
         }
 
         return (
-            <div className="modal-background" onClick={this.props.onClose}>
+            <div className="modal-background" onClick={this.props.onClose} style={style}>
                 <div className="flex flex-col flex-auto full-height">
                     <div className="container" style={{margin : 'auto'}}>
                     <div className="columns">
                     <div className="column is-10 is-offset-1">
-                    <div className="message is-dark z-3" onClick={this.killPropagation}>
+                    <div className="message z-3" onClick={this.killPropagation}>
                     <div className="content">
                         <div className="message-header">
                         <div className="level">
@@ -37,7 +37,7 @@ export default class Help extends Component {
                         </div>
                         <div className="message-body" style={{height : '63%', overflow: 'auto'}}>
                         <p>
-                            Electioneer is a website for creating and voting in elections. It uses the <a href="https://en.wikipedia.org/wiki/Instant-runoff_voting">instant runoff voting system</a> to guarantee fair election results with ballots that are easy to use and understand.
+                            Electioneer uses the <a href="https://en.wikipedia.org/wiki/Instant-runoff_voting" target="_blank">instant runoff voting system</a> to guarantee fair election results with ballots that are easy to use and understand.
                         </p>
                         <h6><strong>How do I vote?</strong></h6>
                         <p>

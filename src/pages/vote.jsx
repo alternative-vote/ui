@@ -10,6 +10,7 @@ import {Motion, spring, presets} from 'react-motion';
 import Halogen from 'halogen';
 
 import Ballot from '../components/ballot'
+import VotesList from '../components/votesList'
 import Results from '../components/results'
 import Help from '../components/help'
 
@@ -132,9 +133,16 @@ class VotePage extends Component {
       )
     }
 
-    let body = <Ballot ballot={this.data.ballot} candidates={this.data.election.candidates} disabled={this.isBallotDisabled()}/>
+    let body;
     if(this.data.election.state == 'complete') {
-        body = <Results candidates={this.data.election.results.orderedCandidates}/>
+      body = (
+        <div>
+          <Results results={this.data.election.results}/>
+          <br/>
+        </div>
+      )
+    } else {
+      body = <Ballot ballot={this.data.ballot} candidates={this.data.election.candidates} disabled={this.isBallotDisabled()}/>
     }
 
     return (
@@ -152,9 +160,19 @@ class VotePage extends Component {
         </div>
         </div>
         <div className="level-right">
-          <div className="level-item">
+          <div className="level-item tooltip-wrapper" style={{position : 'relative'}}>
             <p className="heading">{this.getStatus()}</p>
             {this.ballotIcon()}
+            <div className="tooltip z-3">
+              <div className="message">
+                <div className="message-header">
+                  {this.getTooltipText().header}
+                </div>
+                <div className="message-body">
+                  {this.getTooltipText().body}
+                </div>
+              </div>
+            </div>
             </div>
           </div>
         </div>
@@ -163,11 +181,7 @@ class VotePage extends Component {
         <div className="flex flex-auto flex-col" style={{minHeight: '300px'}}>
           {body}
         </div>
-        <div className="container">
-          <div className="flex-none">
-            {this.footerButtons()}
-        </div>
-        </div>
+        {this.footerButtons()}
       </div>
     )
   }
@@ -185,7 +199,7 @@ class VotePage extends Component {
         body = 'Your vote will not count until it is submitted and confirmed.'
       } else {
         header = 'You did not vote.'
-        body = 'You missed your opportunity. Sorry!'
+        body = 'This election is closed; you missed your opportunity. Sorry!'
       }
     }
 
@@ -207,7 +221,6 @@ class VotePage extends Component {
 
         const ballotStyle = {
           opacity : isSubmitted ? 0 : 1,
-          color : 'OrangeRed',
         }
 
         const receivedStyle = {
@@ -216,30 +229,17 @@ class VotePage extends Component {
           left : 0,
           opacity : isSubmitted ? 1 : 0,
           marginRight: Math.round(green),
-          color : `rgb(0,${Math.round(green)},0)`,
           transform: `scale(${scale})`,
         }
 
-        const {header, body} = this.getTooltipText();
-
         return (
-          <div style={{position: 'relative'}} className="tooltip-wrapper">
-            <div className="icon is-large" style={ballotStyle}>
+          <div style={{position: 'relative'}}>
+            <div className="icon is-large is-danger" style={ballotStyle}>
               <i className="icon-ballot" ></i>
             </div>
-            <div className="icon is-large" style={receivedStyle}>
+            <div className="icon is-large is-success" style={receivedStyle}>
               <i className="icon-ballot-received"></i>
             </div>
-            <div className="tooltip z-3">
-                <div className="message">
-                  <div className="message-header">
-                    {header}
-                  </div>
-                  <div className="message-body">
-                    {body}
-                  </div>
-                </div>
-              </div>
           </div>
         )
       }}
@@ -264,7 +264,13 @@ class VotePage extends Component {
   }
 
   footerButtons = () => {
+    if(this.data.election.state == 'complete') {
+      return null;
+    }
+
     return (
+    <div className="flex-none">
+    <div className="container">
     <Motion style={this.flipButtons()}>
       {interpolatedStyle => {
         const {rotation} = interpolatedStyle;
@@ -308,9 +314,9 @@ class VotePage extends Component {
         }
 
         return (
-          <div className="nav" style={{margin: '10px 0px'}}>
-            <div className="nev-left">
-              <div className="nav-item">
+          <div className="level" style={{margin: '10px 0px'}}>
+            <div className="level-left">
+              <div className="level-item">
                 <a onClick={this.showHelp}>
                   help!
                 </a>
@@ -321,6 +327,8 @@ class VotePage extends Component {
         );
       }}
       </Motion>
+      </div>
+      </div>
     )
   }
 
@@ -329,6 +337,7 @@ class VotePage extends Component {
       <div className="full-height flex flex-col">   
         <Help disabled={!this.data.help} onClose={this.closeHelp}></Help>
         <header className="hero is-primary flex-none">
+          <div className="header-stripe"></div>
           <div className="hero-head">
             <div className="container">
             <nav className="nav">

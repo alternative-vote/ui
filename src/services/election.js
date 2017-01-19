@@ -61,9 +61,20 @@ class ElectionService {
             election.title = "LogRhythm Hackathon"
             election.subtitle = "Q1 2017"
             election.description = "The best and brightest of logrhythm compete in a hackathon for cash money."
-            election.state = "running"
+            election.state = "complete"
 
             election.candidates = candidates;
+
+            election.results = {
+                orderedCandidates : candidates,
+                stats : {
+                    start : '2017-01-19T12:35:16-07:00',
+                    end : '2017-01-19T12:47:12-07:00',
+                    numVoters : 15,
+                    ballotsSubmitted : 13,
+                    averageCandidatesRanked : 6.3,
+                }
+            }
 
             return election
         })
@@ -78,6 +89,13 @@ class ElectionService {
     }
 
     getFromHash(hash) {
+        // return q.all([
+        //     this.getById(),
+        //     this.getBallot(),
+        // ]).spread((election, ballot) => {
+        //     return {election, ballot}
+        // })
+
         return q(fetch(`/api/vote/${hash}`)).then((res) => {
             if(!res.ok) {
                 throw('Failed to get election')
@@ -113,6 +131,8 @@ class ElectionService {
     }
 
     saveBallot(hash, ballot) {
+        // return q();
+
         return q(fetch(`/api/vote/${hash}`, {
             method : 'PUT',
             headers: {
