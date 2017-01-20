@@ -148,6 +148,7 @@ class VotePage extends Component {
       <div className="container flex flex-col flex-auto">
         <div className="flex-none">
         <div className="level">
+        <div className="level-left">
         <div className="level-item">
         <div>
         <h1 className="title is-1">
@@ -158,8 +159,9 @@ class VotePage extends Component {
         </h2>
         </div>
         </div>
+        </div>
         <div className="level-right">
-          <div className="level-item tooltip-wrapper" style={{position : 'relative'}}>
+          <div className="level-item tooltip-wrapper flex-col" style={{position : 'relative'}}>
             <p className="heading">{this.getStatus()}</p>
             {this.ballotIcon()}
             <div className="tooltip z-3">

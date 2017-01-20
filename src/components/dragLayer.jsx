@@ -78,7 +78,8 @@ export default class CardDragLayer extends Component{
             transform: transform,
             WebkitTransform: transform,
             opacity: '0.5',
-            trasition : 'all 0.3s'
+            trasition : 'all 0.3s',
+            width : '300px',
         };
     }
 

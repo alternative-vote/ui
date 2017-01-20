@@ -135,7 +135,7 @@ export default class VotesList extends Component {
                             <div className="level-item">
                                 <a className="button" onClick={this.showHelp}
                                         disabled={this.props.disabled}>
-                                    <span className="icon is-primary is-small">
+                                    <span className="icon is-primary">
                                         <i className="fa fa-question-circle-o"></i>
                                     </span>
                                 </a>

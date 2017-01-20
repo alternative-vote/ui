@@ -34,19 +34,19 @@ export default class Results extends Component {
             <div>
             <div className="card z-2 is-fullwidth ">
                 <div className="card-content level">
-                    <div className="level-item has-text-centered">
+                    <div className="level-item has-text-centered flex-col">
                         <p className="heading">Runtime</p>
                         <h1 className="title">{runtime}</h1>
                     </div>
-                    <div className="level-item has-text-centered">
+                    <div className="level-item has-text-centered flex-col">
                         <p className="heading">Voters</p>
                         <h1 className="title">{numVoters}</h1>
                     </div>
-                    <div className="level-item has-text-centered">
+                    <div className="level-item has-text-centered flex-col">
                         <p className="heading">Response Rate</p>
                         <h1 className="title">{responseRate}%</h1>
                     </div>
-                    <div className="level-item has-text-centered">
+                    <div className="level-item has-text-centered flex-col">
                         <p className="heading">Average Length of Ballot</p>
                         <h1 className="title">{averageCandidatesRanked}</h1>
                     </div>
