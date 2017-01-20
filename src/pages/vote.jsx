@@ -37,21 +37,11 @@ class VotePage extends Component {
     const hash = this.props.params.hash
     const userId = 'asdf'
 
-    const debouncedSave = _.debounce(this.saveBallot, 1000);
-
     election.getFromHash(hash).then(({election, ballot})=>{
       this.data.election = election
       this.data.ballot = ballot
 
       let first = true;
-      autorun(() => {
-        JSON.stringify(this.data.ballot.votes)
-        if(first) {
-          first = false;
-        } else {
-          debouncedSave();
-        }
-      });
 
       if(election.data == 'edit') {
         this.data.is404=true;
@@ -314,7 +304,7 @@ class VotePage extends Component {
           dom = (
             <div className="nav-right">
               <div className="nav-item">
-                <button className="button" style={{opacity:0}} disabled>Unsubmit</button>
+                <button className="button" style={{opacity:0}} disabled>placeholder</button>
                 <span style={style}>You're done!</span>
               </div>
             </div>
