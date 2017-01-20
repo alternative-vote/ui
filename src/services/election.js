@@ -35,6 +35,15 @@ const candidates = [
 ]
 
 //states: edit, running, complete
+function shuffle(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}
 
 class ElectionService {
 
@@ -63,7 +72,7 @@ class ElectionService {
             election.description = "The best and brightest of logrhythm compete in a hackathon for cash money."
             election.state = "running"
 
-            election.candidates = candidates;
+            election.candidates = shuffle(candidates);
 
             election.results = {
                 orderedCandidates : candidates,
@@ -115,13 +124,15 @@ class ElectionService {
             electionModel.state = election.state;
             electionModel.results = election.results;
 
-            electionModel.candidates = election.candidates.map((candidate) => {
+            const candidates = election.candidates.map((candidate) => {
                 const candidateModel = new Candidate();
                 candidateModel.title = candidate.title;
                 candidateModel.subtitle = candidate.subtitle;
                 candidateModel.description = candidate.description;
                 return candidateModel;
             });
+
+            electionModel.candidates = shuffle(candidates);
 
             return {
                 election : electionModel,
