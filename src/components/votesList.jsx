@@ -127,18 +127,22 @@ export default class VotesList extends Component {
         const ui = (
             <div className={"card z-2 is-fullwidth flex flex-col candidate-list " + (isOver ? 'over' : '')}>
                 <div className="card-content flex-none">
-                    <div>
-                        <h1 className="title has-text-centered">My Ballot</h1>
-                        <span className="icon is-primary" style={{
-                            position : 'absolute',
-                            top : 20,
-                            right : 20,
-                            opacity : this.props.disabled ? 0 : 1,
-                        }}>
-                        <i className="fa fa-question-circle" 
-                            onClick={this.showHelp}></i>
-                        </span>
+                    <div className="level">
+                        <div className="level-item">
+                            <h1 className="title has-text-centered">My Ballot</h1>
+                        </div>
+                        <div className="level-right">
+                            <div className="level-item">
+                                <a className="button" onClick={this.showHelp}
+                                        disabled={this.props.disabled}>
+                                    <span className="icon is-primary is-small">
+                                        <i className="fa fa-question-circle-o"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
+                   
                 </div>
                 <div className="flex flex-auto">
                     <div className="scroll-fade-top"></div>

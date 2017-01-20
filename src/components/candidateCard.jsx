@@ -6,14 +6,14 @@ import { observer } from 'mobx-react';
 
 const cardSource = {
     beginDrag(props) {
-        document.body.style.userSelect = 'none';
+        document.body.classList.add('no-select');
         return {
             candidateId : props.candidate.title,
         }
     },
 
     endDrag() {
-        document.body.style.userSelect = 'initial';
+        document.body.classList.remove('no-select');
     }
 }
 

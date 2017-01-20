@@ -89,12 +89,12 @@ class ElectionService {
     }
 
     getFromHash(hash) {
-        // return q.all([
-        //     this.getById(),
-        //     this.getBallot(),
-        // ]).spread((election, ballot) => {
-        //     return {election, ballot}
-        // })
+        return q.all([
+            this.getById(),
+            this.getBallot(),
+        ]).spread((election, ballot) => {
+            return {election, ballot}
+        })
 
         return q(fetch(`/api/vote/${hash}`)).then((res) => {
             if(!res.ok) {
@@ -131,7 +131,7 @@ class ElectionService {
     }
 
     saveBallot(hash, ballot) {
-        // return q();
+        return q();
 
         return q(fetch(`/api/vote/${hash}`, {
             method : 'PUT',
