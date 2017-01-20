@@ -133,8 +133,7 @@ export default class VotesList extends Component {
                         </div>
                         <div className="level-right">
                             <div className="level-item">
-                                <a className="button" onClick={this.showHelp}
-                                        disabled={this.props.disabled}>
+                                <a className="button" onClick={this.showHelp}>
                                     <span className="icon is-primary">
                                         <i className="fa fa-question-circle-o"></i>
                                     </span>
